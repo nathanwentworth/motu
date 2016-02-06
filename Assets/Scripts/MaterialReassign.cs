@@ -1,12 +1,28 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEditor;
+using System.IO;
 
 public class MaterialReassign : MonoBehaviour {
 
+	private string url;
+
+	void Start(){
+		url = "file://" + Application.dataPath +"/Resources/Screenshot.png";
+		print (url);
+	}
+
 	void Update(){
-		AssetDatabase.Refresh ();
-		Texture newpic = Resources.Load("Screenshot", typeof(Texture)) as Texture; 
-		gameObject.GetComponent<Renderer> ().material.SetTexture ("_MainText", newpic); 
+		if (Input.GetButton ("Fire1")) {
+			StartCoroutine ("LoadImage");
+		}
+	}
+
+	IEnumerator LoadImage(){
+		Texture2D image = new Texture2D (2, 2);
+		WWW www = new WWW(url);
+		yield return www;
+		www.LoadImageIntoTexture (image);
+		gameObject.GetComponent<Renderer> ().material.mainTexture = image;
+		yield return null;
 	}
 }

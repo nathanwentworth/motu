@@ -30,7 +30,11 @@ public class ScreenShot : MonoBehaviour {
 		}
 		
 		if(Input.GetButtonDown("Fire1")){
-			Application.CaptureScreenshot("Assets\\Resources\\Screenshot.png");
+			if (Application.isEditor) {
+				Application.CaptureScreenshot ("Assets\\Resources\\Screenshot.png");
+			} else {
+				Application.CaptureScreenshot ("Resources\\Screenshot.png");
+			}
 			Debug.Log ("*Camera Sound*");
 			startResetCameraUI = true;
 		}
