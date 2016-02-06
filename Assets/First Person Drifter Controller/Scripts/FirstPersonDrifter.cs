@@ -8,13 +8,13 @@ using System.Collections;
 [RequireComponent (typeof (CharacterController))]
 public class FirstPersonDrifter: MonoBehaviour
 {
-    public float walkSpeed = 6.0f;
-    public float runSpeed = 10.0f;
+    public float runSpeed = 6.0f;
+    public float crouchSpeed = 10.0f;
  
     // If true, diagonal speed (when strafing + moving forward or back) can't exceed normal move speed; otherwise it's about 1.4 times faster
     private bool limitDiagonalSpeed = true;
  
-    public bool enableRunning = false;
+    public bool enableCrouching = false;
  
     public float jumpSpeed = 4.0f;
     public float gravity = 10.0f;
@@ -57,7 +57,7 @@ public class FirstPersonDrifter: MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         myTransform = transform;
-        speed = walkSpeed;
+        speed = runSpeed;
         rayDistance = controller.height * .5f + controller.radius;
         slideLimit = controller.slopeLimit - .1f;
         jumpTimer = antiBunnyHopFactor;
@@ -92,9 +92,9 @@ public class FirstPersonDrifter: MonoBehaviour
                     FallingDamageAlert (fallStartLevel - myTransform.position.y);
             }
  
-            if( enableRunning )
+            if( enableCrouching )
             {
-            	speed = Input.GetButton("Run")? runSpeed : walkSpeed;
+            	speed = Input.GetButton("Crouch")? crouchSpeed : runSpeed;
             }
  
             // If sliding (and it's allowed), or if we're on an object tagged "Slide", get a vector pointing down the slope we're on
