@@ -8,15 +8,25 @@ public class ScreenShot : MonoBehaviour {
 	//Private Fields
 	private bool startResetCameraUI;
 	private float resetCameraUI;
+	private bool aimDown;
 	//Non-Input but Referenced
 	public string whatAnimal;
 
 	void Start(){
 		resetCameraUI = 0.0f;
+		ui_CameraUI.SetActive(false);
 	}
 
 	void Update(){
-		if (Input.GetButtonDown ("Fire1")) {
+		if (Input.GetButton("Fire2")) {
+			aimDown = true;
+			ui_CameraUI.SetActive(true);
+		}
+		else{
+			aimDown = false;
+			ui_CameraUI.SetActive(false);
+		}
+		if (Input.GetButtonDown ("Fire1") && aimDown) {
 			//Disable Camera UI
 			ui_CameraUI.SetActive (false);
 			//Send out a ray that returns a string
@@ -49,7 +59,7 @@ public class ScreenShot : MonoBehaviour {
 			resetCameraUI += Time.deltaTime;
 		}
 
-		if (resetCameraUI >= 0.000001f) {
+		if (resetCameraUI >= 0.1f) {
 			ui_CameraUI.SetActive (true);
 			startResetCameraUI = false;
 			resetCameraUI = 0.0f;
