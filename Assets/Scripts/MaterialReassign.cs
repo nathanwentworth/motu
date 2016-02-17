@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.IO;
+using UnityEngine.UI;
 
 public class MaterialReassign : MonoBehaviour {
 
@@ -17,6 +18,7 @@ public class MaterialReassign : MonoBehaviour {
 		if (Input.GetButton ("Fire1")) {
 			switch (screenshot.whatAnimal) {
 			case "stretchdog":
+				print ("Start of switch");
 				if (this.gameObject.tag == "StretchDogScreen") {
 					StartCoroutine ("LoadImageStretchDog");
 				}
@@ -32,11 +34,12 @@ public class MaterialReassign : MonoBehaviour {
 	}
 
 	IEnumerator LoadImageStretchDog(){
+		print ("Starting Coroutine");
 		Texture2D image = new Texture2D (2, 2);
 		WWW www = new WWW(SDPath);
 		yield return www;
 		www.LoadImageIntoTexture (image);
-		gameObject.GetComponent<Renderer> ().material.mainTexture = image;
+		gameObject.GetComponent<RawImage> ().texture = image;
 		yield return null;
 	}
 
