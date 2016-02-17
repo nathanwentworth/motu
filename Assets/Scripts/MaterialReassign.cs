@@ -15,7 +15,8 @@ public class MaterialReassign : MonoBehaviour {
 	}
 
 	void Update(){
-		if (Input.GetButton ("Fire1")) {
+		if (Input.GetButton ("HUD")) {
+			print ("fuck the popo");
 			switch (screenshot.whatAnimal) {
 			case "stretchdog":
 				print ("Start of switch");
