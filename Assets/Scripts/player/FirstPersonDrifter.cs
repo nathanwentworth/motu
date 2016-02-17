@@ -40,7 +40,7 @@ public class FirstPersonDrifter: MonoBehaviour
     public int antiBunnyHopFactor = 1;
  
     private Vector3 moveDirection = Vector3.zero;
-    private bool grounded = false;
+	public bool grounded = false;
     private CharacterController controller;
     private Transform myTransform;
     private float speed;
@@ -52,6 +52,7 @@ public class FirstPersonDrifter: MonoBehaviour
     private Vector3 contactPoint;
     private bool playerControl = false;
     private int jumpTimer;
+	private float jumpSpeedOrigin;
  
     void Start()
     {
@@ -61,6 +62,7 @@ public class FirstPersonDrifter: MonoBehaviour
         rayDistance = controller.height * .5f + controller.radius;
         slideLimit = controller.slopeLimit - .1f;
         jumpTimer = antiBunnyHopFactor;
+		jumpSpeedOrigin = jumpSpeed;
     }
  
     void FixedUpdate() {
@@ -68,8 +70,14 @@ public class FirstPersonDrifter: MonoBehaviour
         float inputY = Input.GetAxis("Vertical");
         // If both horizontal and vertical are used simultaneously, limit speed (if allowed), so the total doesn't exceed normal move speed
         float inputModifyFactor = (inputX != 0.0f && inputY != 0.0f && limitDiagonalSpeed)? .7071f : 1.0f;
- 
-        if (grounded) {
+ 		
+		if (Input.GetButton ("Crouch")) {
+			jumpSpeed = 0;
+		} else {
+			jumpSpeed = jumpSpeedOrigin;
+		}
+        
+		if (grounded) {
             bool sliding = false;
             // See if surface immediately below should be slid down. We use this normally rather than a ControllerColliderHit point,
             // because that interferes with step climbing amongst other annoyances
@@ -92,7 +100,7 @@ public class FirstPersonDrifter: MonoBehaviour
                     FallingDamageAlert (fallStartLevel - myTransform.position.y);
             }
  
-            if( enableCrouching )
+			if( enableCrouching && grounded)
             {
             	speed = Input.GetButton("Crouch")? crouchSpeed : runSpeed;
             }
@@ -113,8 +121,9 @@ public class FirstPersonDrifter: MonoBehaviour
             }
  
             // Jump! But only if the jump button has been released and player has been grounded for a given number of frames
-            if (!Input.GetButton("Jump"))
-                jumpTimer++;
+			if (!Input.GetButton ("Jump")) {
+				jumpTimer++;
+			}
             else if (jumpTimer >= antiBunnyHopFactor) {
                 moveDirection.y = jumpSpeed;
                 jumpTimer = 0;

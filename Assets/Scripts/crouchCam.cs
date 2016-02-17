@@ -5,6 +5,7 @@ public class crouchCam : MonoBehaviour {
 
 	private Vector3 topPos;
 	private Vector3 botPos;
+	public FirstPersonDrifter controller;
 
   public float speed;
 
@@ -15,7 +16,7 @@ public class crouchCam : MonoBehaviour {
 	
 
 	void Update () {
-		if (Input.GetButton("Crouch")) {
+		if (Input.GetButton("Crouch") && controller.grounded) {
 			transform.localPosition = Vector3.Lerp(transform.localPosition, botPos, Time.deltaTime * speed);
 		}
 		else {
