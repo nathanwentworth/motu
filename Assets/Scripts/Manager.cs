@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Audio;
 
 public class Manager : MonoBehaviour {
 
@@ -14,6 +15,7 @@ public class Manager : MonoBehaviour {
 		enableInput = true;
 		beatiaryOn = false;
 		mouse.Lock ();
+		AudioListener.pause = false;
 	}
 
 	void Update(){
@@ -31,10 +33,12 @@ public class Manager : MonoBehaviour {
 				Time.timeScale = 1.0f;
 				mouse.Lock ();
 				pauseBG.SetActive (false);
+				AudioListener.pause = false;
 			} else {
 				Time.timeScale = 0.0f;
 				mouse.Unlock();
 				pauseBG.SetActive (true);
+				AudioListener.pause = true;
 			}
 		}
 

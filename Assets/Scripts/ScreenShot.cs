@@ -67,9 +67,9 @@ public class ScreenShot : MonoBehaviour {
 				startResetCameraUI = false;
 				resetCameraUI = 0.0f;
 			}
-			audioTime += Time.deltaTime;
+			/*audioTime += Time.deltaTime;
 			if (audioTime > 10.5)
-				audioo.volume += (Time.deltaTime * 0.05f);
+				audioo.volume += (Time.deltaTime * 0.05f);*/
 		}
 	}
 
