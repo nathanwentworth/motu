@@ -8,16 +8,20 @@ public class beastiarySwitch : MonoBehaviour {
 
 	private bool mainUIOn;
 
+	public LockMouse mouse;
+	public ScreenShot screenshot;
+
 
 
 	void Update() {
-		if (Input.GetButtonDown("HUD") && mainUIOn == false) {
+		if (Input.GetButtonDown("HUD") && mainUIOn == false && screenshot.aimDown == false) {
 			mainBeastUI.SetActive(true);
 			mainUIOn = true;
 		}
 		else if (Input.GetButtonDown("HUD") && mainUIOn == true) {	
 			mainBeastUI.SetActive(false);
 			mainUIOn = false;
+			mouse.Lock ();
 		}
 	}
 	void Start() {
