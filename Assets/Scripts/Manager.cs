@@ -4,9 +4,11 @@ using System.Collections;
 public class Manager : MonoBehaviour {
 
 	public bool enableInput;
-	public GameObject main_container;
 	public bool beatiaryOn;
+	public GameObject main_container;
 	public LockMouse mouse;
+	public ScreenShot screenshot;
+	public GameObject pauseBG;
 
 	void Start(){
 		enableInput = true;
@@ -15,6 +17,7 @@ public class Manager : MonoBehaviour {
 	}
 
 	void Update(){
+
 		if (main_container.activeSelf == true) {
 			enableInput = false;
 			beatiaryOn = true;
@@ -22,11 +25,20 @@ public class Manager : MonoBehaviour {
 			enableInput = true;
 			beatiaryOn = false;
 		}
-		if( Input.GetMouseButtonDown(0) && Time.timeScale > 0.0f && beatiaryOn == false) {
-			mouse.Lock ();
+	
+		if  (Input.GetKeyDown(KeyCode.Escape) && !beatiaryOn && !screenshot.aimDown){
+			if (Time.timeScale == 0.0f) {
+				Time.timeScale = 1.0f;
+				mouse.Lock ();
+				pauseBG.SetActive (false);
+			} else {
+				Time.timeScale = 0.0f;
+				mouse.Unlock();
+				pauseBG.SetActive (true);
+			}
 		}
-		if  (Input.GetKeyDown(KeyCode.Escape) || beatiaryOn == true )
-		{
+
+		if (beatiaryOn == true) {
 			mouse.Unlock ();
 		}
 	}
