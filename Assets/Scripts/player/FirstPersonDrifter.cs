@@ -53,6 +53,9 @@ public class FirstPersonDrifter: MonoBehaviour
     private bool playerControl = false;
     private int jumpTimer;
 	private float jumpSpeedOrigin;
+	private float inputX;
+	private float inputY;
+	public Manager gameManager;
  
     void Start()
     {
@@ -66,8 +69,17 @@ public class FirstPersonDrifter: MonoBehaviour
     }
  
     void FixedUpdate() {
-        float inputX = Input.GetAxis("Horizontal");
-        float inputY = Input.GetAxis("Vertical");
+		if (gameManager.enableInput) {
+			inputX = Input.GetAxis ("Horizontal");
+			inputY = Input.GetAxis ("Vertical");
+			gameObject.GetComponent<MouseLook> ().enabled = true;
+			gameObject.GetComponentInChildren<HeadBob> ().enabled = true;
+			gameObject.GetComponentInChildren<MouseLookY> ().enabled = true;
+		} else {
+			gameObject.GetComponent<MouseLook> ().enabled = false;
+			gameObject.GetComponentInChildren<HeadBob> ().enabled = false;
+			gameObject.GetComponentInChildren<MouseLookY> ().enabled = false;
+		}
         // If both horizontal and vertical are used simultaneously, limit speed (if allowed), so the total doesn't exceed normal move speed
         float inputModifyFactor = (inputX != 0.0f && inputY != 0.0f && limitDiagonalSpeed)? .7071f : 1.0f;
  		

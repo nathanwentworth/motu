@@ -11,10 +11,14 @@ public class ScreenShot : MonoBehaviour {
 	private bool aimDown;
 	//Non-Input but Referenced
 	public string whatAnimal;
+	private AudioSource audioo;
+	private float audioTime;
 
 	void Start(){
 		resetCameraUI = 0.0f;
 		ui_CameraUI.SetActive(false);
+		audioo = gameObject.GetComponent<AudioSource>();
+		audioo.volume = 0;
 	}
 
 	void Update(){
@@ -64,6 +68,9 @@ public class ScreenShot : MonoBehaviour {
 			startResetCameraUI = false;
 			resetCameraUI = 0.0f;
 		}
+		audioTime += Time.deltaTime;
+		if (audioTime > 10.5)
+			audioo.volume += (Time.deltaTime * 0.05f);
 	}
 
 	void Raycasting(){
