@@ -6,9 +6,9 @@ public class Manager : MonoBehaviour {
 	public bool enableInput;
 	public bool beatiaryOn;
 	public GameObject main_container;
-	public LockMouse mouse;
 	public ScreenShot screenshot;
 	public GameObject pauseBG;
+	LockMouse mouse = new LockMouse ();
 
 	void Start(){
 		enableInput = true;

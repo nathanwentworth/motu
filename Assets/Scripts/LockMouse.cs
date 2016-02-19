@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LockMouse : MonoBehaviour
-{
+public class LockMouse {
 
 	public void Lock(){
 		Cursor.visible = false;

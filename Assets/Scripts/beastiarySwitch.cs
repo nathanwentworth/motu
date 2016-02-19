@@ -8,7 +8,7 @@ public class beastiarySwitch : MonoBehaviour {
 
 	private bool mainUIOn;
 
-	public LockMouse mouse;
+	LockMouse mouse = new LockMouse ();
 	public ScreenShot screenshot;
 
 
