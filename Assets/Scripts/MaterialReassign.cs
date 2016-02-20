@@ -7,7 +7,7 @@ public class MaterialReassign : MonoBehaviour {
 
 	private string SDPath;
 	private string other;
-	public ScreenShot screenshot;
+	public Manager gameManager;
 
 	void Start(){
 		SDPath = "file://" + Application.dataPath +"/Resources/StretchDog.png";
@@ -16,7 +16,7 @@ public class MaterialReassign : MonoBehaviour {
 
 	void Update(){
 		if (Input.GetButton ("HUD")) {
-			switch (screenshot.whatAnimal) {
+			switch (gameManager.whatAnimal) {
 			case "stretchdog":
 				print ("Start of switch");
 				if (this.gameObject.tag == "StretchDogScreen") {

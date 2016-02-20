@@ -23,7 +23,7 @@ public class ScreenShot : MonoBehaviour {
 	}
 
 	void Update(){
-		if (gameManager.beatiaryOn == false) {
+		//if (gameManager.beatiaryOn == false) {
 			if (Input.GetButton ("Fire2")) {
 				aimDown = true;
 				ui_CameraUI.SetActive (true);
@@ -67,11 +67,8 @@ public class ScreenShot : MonoBehaviour {
 				startResetCameraUI = false;
 				resetCameraUI = 0.0f;
 			}
-			/*audioTime += Time.deltaTime;
-			if (audioTime > 10.5)
-				audioo.volume += (Time.deltaTime * 0.05f);*/
 		}
-	}
+	//}
 
 	void Raycasting(){
 		RaycastHit hit;

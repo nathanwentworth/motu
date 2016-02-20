@@ -69,7 +69,7 @@ public class FirstPersonDrifter: MonoBehaviour
     }
  
     void FixedUpdate() {
-		if (gameManager.enableInput) {
+		if (gameManager.enableMovement) {
 			inputX = Input.GetAxis ("Horizontal");
 			inputY = Input.GetAxis ("Vertical");
 			gameObject.GetComponent<MouseLook> ().enabled = true;
