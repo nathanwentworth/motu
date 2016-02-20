@@ -16,6 +16,10 @@ public class MaterialReassign : MonoBehaviour {
 
 	void Update(){
 		if (Input.GetButton ("HUD")) {
+			StartCoroutine ("LoadImageStretchDog");
+			//StartCoroutine ("LoadImageOther");
+		}
+		/*if (Input.GetButton ("HUD")) {
 			switch (gameManager.whatAnimal) {
 			case "stretchdog":
 				print ("Start of switch");
@@ -30,7 +34,7 @@ public class MaterialReassign : MonoBehaviour {
 				}
 				break;
 			}
-		}
+		}*/
 	}
 
 	IEnumerator LoadImageStretchDog(){

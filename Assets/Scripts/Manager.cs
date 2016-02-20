@@ -122,16 +122,20 @@ public class Manager : MonoBehaviour {
 			if (whatAnimal == "stretchdog") {
 				if (Application.isEditor) {
 					Application.CaptureScreenshot ("Assets\\Resources\\StretchDog.png");
+					whatAnimal = "";
 				} else {
 					Application.CaptureScreenshot ("Resources\\StretchDog.png");
+					whatAnimal = "";
 				}
 
 				startResetCameraUI = true;
 			} else {
 				if (Application.isEditor) {
 					Application.CaptureScreenshot ("Assets\\Resources\\Other.png");
+					whatAnimal = "";
 				} else {
 					Application.CaptureScreenshot ("Resources\\Other.png");
+					whatAnimal = "";
 				}
 
 				startResetCameraUI = true;
