@@ -75,19 +75,23 @@ public class FirstPersonDrifter: MonoBehaviour
 			gameObject.GetComponent<MouseLook> ().enabled = true;
 			gameObject.GetComponentInChildren<HeadBob> ().enabled = true;
 			gameObject.GetComponentInChildren<MouseLookY> ().enabled = true;
+			gameObject.GetComponentInChildren<CameraZoom> ().enabled = true;
+			gameObject.GetComponentInChildren<crouchCam> ().enabled = true;
+			jumpSpeed = jumpSpeedOrigin;
 		} else {
+			gameObject.GetComponentInChildren<CameraZoom> ().enabled = false;
 			gameObject.GetComponent<MouseLook> ().enabled = false;
 			gameObject.GetComponentInChildren<HeadBob> ().enabled = false;
 			gameObject.GetComponentInChildren<MouseLookY> ().enabled = false;
+			gameObject.GetComponentInChildren<crouchCam> ().enabled = false;
+			jumpSpeed = 0;
 		}
         // If both horizontal and vertical are used simultaneously, limit speed (if allowed), so the total doesn't exceed normal move speed
         float inputModifyFactor = (inputX != 0.0f && inputY != 0.0f && limitDiagonalSpeed)? .7071f : 1.0f;
  		
 		if (Input.GetButton ("Crouch")) {
 			jumpSpeed = 0;
-		} else {
-			jumpSpeed = jumpSpeedOrigin;
-		}
+		} 
         
 		if (grounded) {
             bool sliding = false;

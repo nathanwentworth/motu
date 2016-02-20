@@ -5,16 +5,17 @@ using UnityEngine.UI;
 
 public class Manager : MonoBehaviour {
 
-	[Header("Enable Input")]
-	public bool enableMovement;
+	[Header("Enable Movement")]
+	public bool enableMovement = true;
 
 	[Header("GameObject References")]
 	public GameObject pauseBG;
-	public Text Notif_TXT;
-	private bool isAnotherUIActive;
 	public GameObject mainBeastUI;
 	public GameObject ui_CameraUI;
 	public GameObject mainCam;
+	public GameObject movementInstructions;
+	public Text Notif_TXT;
+
 	public GameObject[] animalPanels;
 
 	//Private Fields
@@ -22,7 +23,12 @@ public class Manager : MonoBehaviour {
 	private bool startResetCameraUI;
 	private bool mainUIOn;
 	private float resetCameraUI;
-	private bool aimDown;
+	private bool aimDown = false;
+	private bool isAnotherUIActive = false;
+	private bool isW = false;
+	private bool isA = false;
+	private bool isS = false;
+	private bool isD = false;
 
 	//Non-Input but Referenced
 	[Header("Animal Photographed")]
@@ -37,11 +43,8 @@ public class Manager : MonoBehaviour {
 			if (i == 0)
 				animalPanels[i].SetActive(true);
 		}
-		enableMovement = true;
 		mouse.Lock ();
 		AudioListener.pause = false;
-		isAnotherUIActive = false;
-		aimDown = false;
 		ui_CameraUI.SetActive (false);
 	}
 
@@ -132,8 +135,60 @@ public class Manager : MonoBehaviour {
 			resetCameraUI = 0.0f;
 		}
 
-		if (Notif_TXT.IsActive()) {
-			Notif_TXT.text = "Press <color=green>W</color> <color=green>A</color> <color=green>S</color> <color=green>D</color> to move.";
+		if (movementInstructions.activeSelf) {
+			isAnotherUIActive = true;
+			enableMovement = false;
+			//Declare Local Variables
+			float inputX = Input.GetAxis ("Horizontal");
+			float inputY = Input.GetAxis ("Vertical");
+			string strW;
+			string strA;
+			string strS;
+			string strD;
+
+			//Check if keys were pressed
+			if (inputX > 0) {
+				isD = true;
+			} else if (inputX < 0) {
+				isA = true;
+			}
+
+			if (inputY > 0) {
+				isW = true;
+			} else if (inputY < 0) {
+				isS = true;
+			}
+
+			//Change color of text
+			if (isW) {
+				strW = "<color=green>W</color> ";
+			} else {
+				strW = "<color=red>W</color> ";
+			}
+			if (isA) {
+				strA = "<color=green>A</color> ";
+			} else {
+				strA = "<color=red>A</color> ";
+			}
+			if (isS) {
+				strS = "<color=green>S</color> ";
+			} else {
+				strS = "<color=red>S</color> ";
+			}
+			if (isD) {
+				strD = "<color=green>D</color> ";
+			} else {
+				strD = "<color=red>D</color> ";
+			}
+
+			//Update Text
+			Notif_TXT.text = "Press " + strW + strA + strS + strD + "to move.";
+			//Check if all keys have been pressed
+			if (isW && isA && isS && isD) {
+				enableMovement = true;
+				isAnotherUIActive = false;
+				movementInstructions.SetActive (false);
+			}
 		}
 	}
 
