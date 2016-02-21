@@ -15,11 +15,18 @@ public class EventHandling : MonoBehaviour {
 			gameManager.notification_UI.SetActive (true);
 			gameManager.instructions2 = true;
 		}
+
+		if (collider.tag == "TempHut") {
+			gameManager.changeToForestLPF = true;
+		}
 	}
 
 	void OnTriggerExit(Collider collider){
 		if (collider.tag == "MemoryCard1") {
 			gameManager.nearMemCard1 = false;
+		}
+		if (collider.tag == "TempHut") {
+			gameManager.changeToForest = true;
 		}
 	}
 }

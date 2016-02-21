@@ -14,10 +14,15 @@ public class Manager : MonoBehaviour {
 	public GameObject ui_CameraUI;
 	public GameObject mainCam;
 	public GameObject notification_UI;
-	public AudioSource MemCard1Audio;
 	public Text notification_TXT;
-
 	public GameObject[] animalPanels;
+
+	[Header("Audio References")]
+	public AudioSource MemCard1Audio;
+	public AudioSource ForestAmbience1;
+	public AudioSource ForestAmbienceLPF;
+	public AudioSource ItemPickup;
+	public AudioSource[] CameraClicks;
 
 	//Private Fields
 	LockMouse mouse = new LockMouse ();
@@ -42,7 +47,9 @@ public class Manager : MonoBehaviour {
 	[HideInInspector]
 	public string whatAnimal;
 	[HideInInspector]
-	public bool playMemCard1 = false;
+	public bool changeToForestLPF = false;
+	[HideInInspector]
+	public bool changeToForest = false;
 	[HideInInspector]
 	public GameObject MemCard1Object;
 	[HideInInspector]
@@ -114,6 +121,8 @@ public class Manager : MonoBehaviour {
 		}
 		//Take a picture but only if the camera is aimed down
 		if (Input.GetButtonDown ("Fire1") && aimDown) {
+			int i = Random.Range (0, 2);
+			CameraClicks [i].Play ();
 			//Disable Camera UI
 			ui_CameraUI.SetActive (false);
 			//Send out a ray that returns a string
@@ -145,10 +154,11 @@ public class Manager : MonoBehaviour {
 	
 	//OTHER CONDITIONAL STATEMENTS
 		//Play MemCard Audio
-		if (playMemCard1 && Input.GetButtonDown ("Submit")) {
+		if (nearMemCard1 && Input.GetButtonDown ("Submit")) {
+			ItemPickup.Play ();
 			MemCard1Audio.Play ();
 			MemCard1Object.SetActive (false);
-			playMemCard1 = false;
+			nearMemCard1 = false;
 		}
 		//Start the camera reset timer
 		if (startResetCameraUI) {
@@ -162,6 +172,17 @@ public class Manager : MonoBehaviour {
 			startResetCameraUI = false;
 			resetCameraUI = 0.0f;
 		}
+		//Chnage Background Ambience if inside
+		if (changeToForestLPF) {
+			ForestAmbience1.Pause ();
+			ForestAmbienceLPF.Play ();
+			changeToForestLPF = false;
+		} 
+		if (changeToForest) {
+			ForestAmbience1.Play ();
+			ForestAmbienceLPF.Pause ();
+			changeToForest = false;
+		} 
 
 		if (notification_UI.activeSelf) {
 			if (instructions1) {
@@ -261,8 +282,6 @@ public class Manager : MonoBehaviour {
 				if (nearMemCard1) {
 					notification_TXT.text = "Press <color=red>E</color> to pickup and use objects.";
 					if (Input.GetButton ("Submit")) {
-						MemCard1Audio.Play ();
-						Destroy(MemCard1Object);
 						notification_UI.SetActive (false);
 					}
 				}
