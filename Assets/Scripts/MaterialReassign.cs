@@ -38,7 +38,6 @@ public class MaterialReassign : MonoBehaviour {
 	}
 
 	IEnumerator LoadImageStretchDog(){
-		print ("Starting Coroutine");
 		Texture2D image = new Texture2D (2, 2);
 		WWW www = new WWW(SDPath);
 		yield return www;

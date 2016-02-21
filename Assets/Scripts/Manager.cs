@@ -36,6 +36,7 @@ public class Manager : MonoBehaviour {
 	private bool isD = false;
 	private bool isJump = false;
 	private bool isCrouch = false;
+	private bool picOfStretchDog = false;
 
 	//Non-Input but Referenced
 	[HideInInspector]
@@ -238,7 +239,7 @@ public class Manager : MonoBehaviour {
 				if (aimDown) {
 					notification_TXT.text = "Press <color=red>Left Click</color> when looking into your camera's view finder to take a picture. Try taking a picture of that animal over there.";
 
-					if (startResetCameraUI && whatAnimal == "stretchdog") {
+					if (picOfStretchDog) {
 						instructions2 = false;
 						instructions3 = true;
 						notification_UI.SetActive (false);
@@ -285,6 +286,7 @@ public class Manager : MonoBehaviour {
 		if (Physics.Raycast (camRay, out hit, 500)) {
 			if (hit.collider.tag == "StretchDog") {
 				whatAnimal = "stretchdog";
+				picOfStretchDog = true;
 				Debug.Log (hit.distance);
 			} 
 			else {
