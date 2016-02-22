@@ -17,6 +17,10 @@ public class EventHandling : MonoBehaviour {
 		}
 
 		if (collider.tag == "TempHut") {
+            if (gameManager.instructions4)
+            {
+                gameManager.notification_UI.SetActive(true);
+            }
 			gameManager.changeToForestLPF = true;
 		}
 	}
