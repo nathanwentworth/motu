@@ -158,7 +158,6 @@ public class Manager : MonoBehaviour {
 			ItemPickup.Play ();
 			MemCard1Audio.Play ();
 			MemCard1Object.SetActive (false);
-			nearMemCard1 = false;
 		}
 		//Start the camera reset timer
 		if (startResetCameraUI) {
@@ -282,6 +281,7 @@ public class Manager : MonoBehaviour {
 				if (nearMemCard1) {
 					notification_TXT.text = "Press <color=red>E</color> to pickup and use objects.";
 					if (Input.GetButton ("Submit")) {
+						nearMemCard1 = false;
 						notification_UI.SetActive (false);
 					}
 				}
