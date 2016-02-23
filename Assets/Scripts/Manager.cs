@@ -25,7 +25,6 @@ public class Manager : MonoBehaviour
     public AudioSource ItemPickup;
     public AudioSource[] CameraClicks;
     public AudioMixerSnapshot Default;
-    public AudioMixerSnapshot InTent;
 
     //Private Fields
     LockMouse mouse = new LockMouse();
@@ -201,7 +200,6 @@ public class Manager : MonoBehaviour
         //Chnage Background Ambience if inside
         if (changeToForestLPF)
         {
-            //InTent.TransitionTo(0.1f);
             ForestAmbience1.spatialBlend += Time.deltaTime;
             if (ForestAmbience1.spatialBlend == 1)
             {
@@ -210,7 +208,6 @@ public class Manager : MonoBehaviour
         }
         if (changeToForest)
         {
-            //Default.TransitionTo(0.1f);
             ForestAmbience1.spatialBlend -= Time.deltaTime;
             if (ForestAmbience1.spatialBlend == 0)
             {
