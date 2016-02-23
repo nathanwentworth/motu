@@ -201,13 +201,21 @@ public class Manager : MonoBehaviour
         //Chnage Background Ambience if inside
         if (changeToForestLPF)
         {
-            InTent.TransitionTo(0.1f);
-            changeToForestLPF = false;
+            //InTent.TransitionTo(0.1f);
+            ForestAmbience1.spatialBlend += Time.deltaTime;
+            if (ForestAmbience1.spatialBlend == 1)
+            {
+                changeToForestLPF = false;
+            }
         }
         if (changeToForest)
         {
-            Default.TransitionTo(0.1f);
-            changeToForest = false;
+            //Default.TransitionTo(0.1f);
+            ForestAmbience1.spatialBlend -= Time.deltaTime;
+            if (ForestAmbience1.spatialBlend == 0)
+            {
+                changeToForest = false;
+            }
         }
 
         if (notification_UI.activeSelf)
@@ -342,6 +350,7 @@ public class Manager : MonoBehaviour
                     notification_TXT.text = "Press <color=red>E</color> to pickup and use items.";
                     if (Input.GetButton("Submit"))
                     {
+                        instructions4 = false;
                         nearMemCard1 = false;
                         notification_UI.SetActive(false);
                     }
