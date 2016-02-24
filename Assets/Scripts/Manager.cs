@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.Audio;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Manager : MonoBehaviour
 {
@@ -17,12 +18,12 @@ public class Manager : MonoBehaviour
     public GameObject notification_UI;
     public Text notification_TXT;
     public GameObject stretchDog;
+    public GameObject black;
     public GameObject[] animalPanels;
 
     [Header("Audio References")]
     public AudioSource MemCard1Audio;
     public AudioSource ForestAmbience1;
-    public AudioSource ForestAmbienceLPF;
     public AudioSource ItemPickup;
     public AudioSource[] CameraClicks;
     public AudioMixerSnapshot Default;
@@ -42,6 +43,8 @@ public class Manager : MonoBehaviour
     private bool isJump = false;
     private bool isCrouch = false;
     private bool picOfStretchDog = false;
+    private bool pickedUpCard = false;
+    float timer;
 
     //Non-Input but Referenced
     [HideInInspector]
@@ -82,7 +85,6 @@ public class Manager : MonoBehaviour
 
     void Update()
     {
-
         //INPUTS
         //AimDown Camera
         if (Input.GetButton("Fire2") && !isAnotherUIActive)
@@ -185,6 +187,24 @@ public class Manager : MonoBehaviour
             ItemPickup.Play();
             MemCard1Audio.Play();
             MemCard1Object.SetActive(false);
+            pickedUpCard = true;
+        }
+
+        if(pickedUpCard && !MemCard1Audio.isPlaying)
+        {
+            enableMovement = false;
+            timer += Time.deltaTime;
+            if (timer > 2)
+            {
+                black.SetActive(true);
+                AudioListener.pause = true;
+            }
+            if (timer > 3)
+            {
+                //ADD SCENE HERE
+            }
+
+
         }
         //Start the camera reset timer
         if (startResetCameraUI)

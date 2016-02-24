@@ -79,6 +79,8 @@ public class FirstPersonDrifter: MonoBehaviour
 			gameObject.GetComponentInChildren<crouchCam> ().enabled = true;
 			jumpSpeed = jumpSpeedOrigin;
 		} else {
+            inputX = 0;
+            inputY = 0;
 			gameObject.GetComponentInChildren<CameraZoom> ().enabled = false;
 			gameObject.GetComponent<MouseLook> ().enabled = false;
 			gameObject.GetComponentInChildren<HeadBob> ().enabled = false;
