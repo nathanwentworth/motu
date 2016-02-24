@@ -16,6 +16,7 @@ public class Manager : MonoBehaviour
     public GameObject mainCam;
     public GameObject notification_UI;
     public Text notification_TXT;
+    public GameObject stretchDog;
     public GameObject[] animalPanels;
 
     [Header("Audio References")]
@@ -34,8 +35,6 @@ public class Manager : MonoBehaviour
     private bool aimDown = false;
     private bool isAnotherUIActive = false;
     //Tutorial bools
-    private bool instructions1 = true;
-    private bool instructions3 = false;
     private bool isW = false;
     private bool isA = false;
     private bool isS = false;
@@ -53,6 +52,10 @@ public class Manager : MonoBehaviour
     public bool changeToForest = false;
     [HideInInspector]
     public GameObject MemCard1Object;
+    [HideInInspector]
+    public bool instructions1 = true;
+    [HideInInspector]
+    public bool instructions3 = false;
     [HideInInspector]
     public bool instructions2 = false;
     [HideInInspector]
@@ -330,6 +333,7 @@ public class Manager : MonoBehaviour
                 notification_TXT.text = "Press <color=red>Tab</color> to take out your tablet and view the picture you just took.";
                 if (mainUIOn)
                 {
+                    stretchDog.SetActive(false);
                     notification_TXT.text = "Good shot! Whenever you take a new picture the old one will be overwritten. Press <color=red>Tab</color> again to close your tablet.";
                     instructions4 = true;
                 }
