@@ -62,7 +62,7 @@ public class Manager : MonoBehaviour
 
     void Start()
     {
-
+        Time.timeScale = 1;
         //Give Variables Properties
         mainBeastUI.SetActive(false);
         for (int i = 0; i < animalPanels.Length; i++)
