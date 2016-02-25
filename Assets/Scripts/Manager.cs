@@ -201,7 +201,7 @@ public class Manager : MonoBehaviour
             }
             if (timer > 3)
             {
-                //ADD SCENE HERE
+                SceneManager.LoadScene("Start");
             }
 
 
