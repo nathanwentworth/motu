@@ -4,6 +4,8 @@ using System.Collections;
 
 public class OnClick : MonoBehaviour {
 
+	public AudioSource notification;
+
     void Start()
     {
         LockMouse mouse = new LockMouse();
@@ -12,6 +14,7 @@ public class OnClick : MonoBehaviour {
 
     public void Clickerino()
     {
+		notification.Play ();
         SceneManager.LoadScene("Test");
     }
 }
