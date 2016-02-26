@@ -35,6 +35,7 @@ public class Manager : MonoBehaviour
     private float resetCameraUI;
     private bool aimDown = false;
     private bool isAnotherUIActive = false;
+	private bool notiPlay;
     //Tutorial bools
     private bool isW = false;
     private bool isA = false;
