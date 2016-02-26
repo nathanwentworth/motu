@@ -43,11 +43,14 @@ public class Manager : MonoBehaviour
     private bool isD = false;
     private bool isJump = false;
     private bool isCrouch = false;
-    private bool picOfStretchDog = false;
     private bool pickedUpCard = false;
-    float timer;
+    private float timer;
+    private int howManyKeys;
+    private float cameraResetTimer;
 
     //Non-Input but Referenced
+    [HideInInspector]
+    public bool picOfStretchDog = false;
     [HideInInspector]
     public string whatAnimal;
     [HideInInspector]
@@ -85,6 +88,8 @@ public class Manager : MonoBehaviour
 
     void Update()
     {
+        cameraResetTimer -= Time.deltaTime;
+        print(cameraResetTimer);
         //INPUTS
         //AimDown Camera
         if (Input.GetButton("Fire2") && !isAnotherUIActive)
@@ -138,8 +143,9 @@ public class Manager : MonoBehaviour
             AudioListener.pause = false;
         }
         //Take a picture but only if the camera is aimed down
-		if (Input.GetButtonDown("Fire1") && aimDown && mainCam.GetComponent<Camera>().fieldOfView < 41)
-        {
+		if (Input.GetButtonDown("Fire1") && aimDown && mainCam.GetComponent<Camera>().fieldOfView < 41 && cameraResetTimer <= 0)
+		{
+		    cameraResetTimer = 1;
             //PlayCameraClick
             int i = Random.Range(0, 2);
             CameraClicks[i].Play();
@@ -398,7 +404,7 @@ public class Manager : MonoBehaviour
     {
         RaycastHit hit;
         Ray camRay = new Ray(mainCam.transform.position, mainCam.transform.forward);
-        if (Physics.Raycast(camRay, out hit, 500))
+        if (Physics.Raycast(camRay, out hit, 100))
         {
             if (hit.collider.tag == "StretchDog")
             {
