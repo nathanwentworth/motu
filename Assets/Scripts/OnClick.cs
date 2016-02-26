@@ -8,6 +8,7 @@ public class OnClick : MonoBehaviour {
 
     void Start()
     {
+        AudioListener.pause = false;
         LockMouse mouse = new LockMouse();
         mouse.Unlock();
     }
@@ -16,5 +17,11 @@ public class OnClick : MonoBehaviour {
     {
 		notification.Play ();
         SceneManager.LoadScene("Test");
+    }
+
+    public void Quit()
+    {
+        notification.Play();
+        Application.Quit();
     }
 }

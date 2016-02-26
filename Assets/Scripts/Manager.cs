@@ -25,8 +25,8 @@ public class Manager : MonoBehaviour
     public AudioSource MemCard1Audio;
     public AudioSource ForestAmbience1;
     public AudioSource ItemPickup;
+    public AudioSource navigation;
     public AudioSource[] CameraClicks;
-    public AudioMixerSnapshot Default;
 
     //Private Fields
     LockMouse mouse = new LockMouse();
@@ -69,7 +69,6 @@ public class Manager : MonoBehaviour
 
     void Start()
     {
-        Time.timeScale = 1;
         //Give Variables Properties
         mainBeastUI.SetActive(false);
         for (int i = 0; i < animalPanels.Length; i++)
@@ -79,9 +78,9 @@ public class Manager : MonoBehaviour
                 animalPanels[i].SetActive(true);
         }
         mouse.Lock();
+        Time.timeScale = 1;
         AudioListener.pause = false;
         ui_CameraUI.SetActive(false);
-        Default.TransitionTo(2f);
     }
 
     void Update()
@@ -141,6 +140,7 @@ public class Manager : MonoBehaviour
         //Take a picture but only if the camera is aimed down
 		if (Input.GetButtonDown("Fire1") && aimDown && mainCam.GetComponent<Camera>().fieldOfView < 41)
         {
+            //PlayCameraClick
             int i = Random.Range(0, 2);
             CameraClicks[i].Play();
             //Disable Camera UI
@@ -225,7 +225,7 @@ public class Manager : MonoBehaviour
         if (changeToForestLPF)
         {
             ForestAmbience1.spatialBlend += Time.deltaTime;
-            if (ForestAmbience1.spatialBlend == 1)
+            if (ForestAmbience1.spatialBlend == 1.0f)
             {
                 changeToForestLPF = false;
             }
@@ -233,7 +233,7 @@ public class Manager : MonoBehaviour
         if (changeToForest)
         {
             ForestAmbience1.spatialBlend -= Time.deltaTime;
-            if (ForestAmbience1.spatialBlend == 0)
+            if (ForestAmbience1.spatialBlend == 0.0f)
             {
                 changeToForest = false;
             }
@@ -384,6 +384,7 @@ public class Manager : MonoBehaviour
     //Switch Beastiary Menu on Button Press
     public void menuSwitch(int menuPos)
     {
+        navigation.Play();
         animalPanels[menuPos].SetActive(true);
         for (int i = 0; i < animalPanels.Length; i++)
         {
