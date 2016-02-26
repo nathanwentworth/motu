@@ -139,7 +139,7 @@ public class Manager : MonoBehaviour
             AudioListener.pause = false;
         }
         //Take a picture but only if the camera is aimed down
-        if (Input.GetButtonDown("Fire1") && aimDown)
+		if (Input.GetButtonDown("Fire1") && aimDown && mainCam.GetComponent<Camera>().fieldOfView < 41)
         {
             int i = Random.Range(0, 2);
             CameraClicks[i].Play();
