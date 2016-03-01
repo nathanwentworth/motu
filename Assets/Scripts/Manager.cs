@@ -26,6 +26,7 @@ public class Manager : MonoBehaviour
     public AudioSource ForestAmbience1;
     public AudioSource ItemPickup;
     public AudioSource navigation;
+	public AudioSource radio;
     public AudioSource[] CameraClicks;
 
     //Private Fields
@@ -47,6 +48,8 @@ public class Manager : MonoBehaviour
     private float timer;
     private int howManyKeys;
     private float cameraResetTimer;
+	private float startRadio = 1.0f;
+	private bool startRadioBool = true;
 
     //Non-Input but Referenced
     [HideInInspector]
@@ -88,8 +91,16 @@ public class Manager : MonoBehaviour
 
     void Update()
     {
+		if (startRadioBool) {
+			startRadio -= Time.deltaTime;
+		}
         cameraResetTimer -= Time.deltaTime;
-        print(cameraResetTimer);
+
+		if (startRadio <= 0.0f) {
+			radio.Play ();
+			startRadioBool = false;
+			startRadio = 1;
+		}
         //INPUTS
         //AimDown Camera
         if (Input.GetButton("Fire2") && !isAnotherUIActive)
