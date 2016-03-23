@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LockMouse {
+public static class LockMouse {
 
-	public void Lock(){
+	public static void Lock(){
 		Cursor.visible = false;
 		Cursor.lockState = CursorLockMode.Locked;
 	}
 
-	public void Unlock(){
+	public static void Unlock(){
 		Cursor.visible = true;
 		Cursor.lockState = CursorLockMode.None;
 	}
