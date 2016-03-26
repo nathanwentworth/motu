@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using UnityEngine.Audio;
 using UnityEngine.UI;
@@ -30,6 +31,7 @@ public class Manager : MonoBehaviour
 
     void Start()
     {
+		System.IO.Directory.CreateDirectory (Application.streamingAssetsPath);
         photoCamera = secondaryCam.GetComponent<Camera>();
         LockMouse.Lock();
         Time.timeScale = 1;
@@ -85,8 +87,8 @@ public class Manager : MonoBehaviour
             RenderTexture.active = null; // JC: added to avoid errors
             Destroy(rt);
             byte[] bytes = screenShot.EncodeToPNG();
-            string filename = ScreenShotName(currentGameMode, NumberOfPhotos());
-            System.IO.File.WriteAllBytes(filename, bytes);
+			string filename = ScreenShotName (currentGameMode, NumberOfPhotos ());
+			System.IO.File.WriteAllBytes(filename, bytes);
             Debug.Log(string.Format("Took screenshot to: {0}", filename));
             StartCoroutine(LoadImage(filename));
         }
