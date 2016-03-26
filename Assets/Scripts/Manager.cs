@@ -31,7 +31,7 @@ public class Manager : MonoBehaviour
 
     void Start()
     {
-		System.IO.Directory.CreateDirectory (Application.streamingAssetsPath);
+		System.IO.Directory.CreateDirectory (Application.persistentDataPath + "/Photos/");
         photoCamera = secondaryCam.GetComponent<Camera>();
         LockMouse.Lock();
         Time.timeScale = 1;
@@ -90,31 +90,19 @@ public class Manager : MonoBehaviour
 			string filename = ScreenShotName (currentGameMode, NumberOfPhotos ());
 			System.IO.File.WriteAllBytes(filename, bytes);
             Debug.Log(string.Format("Took screenshot to: {0}", filename));
-            StartCoroutine(LoadImage(filename));
         }
     }
 
     public static string ScreenShotName(int currentGameMode, int photoNumber)
     {
-        return string.Format("{0}/MOTUv2_{1}_{2}.png", Application.streamingAssetsPath, currentGameMode, photoNumber);
+		return string.Format("{0}/MOTUv2_{1}_{2}.png", Application.persistentDataPath + "/Photos/", currentGameMode, photoNumber);
     }
 
     public static int NumberOfPhotos()
     {
         int totalFiles = 0;
-        totalFiles = System.IO.Directory.GetFiles(Application.streamingAssetsPath, "MOTU*.png").Length;
+		totalFiles = System.IO.Directory.GetFiles(Application.persistentDataPath + "/Photos/", "MOTU*.png").Length;
         return totalFiles;
-    }
-
-    IEnumerator LoadImage(string fileName)
-    {
-        print("Loading image...");
-        string filePath = string.Format("file://{0}", fileName);
-        Texture2D image = new Texture2D(2, 2);
-        WWW www = new WWW(filePath);
-        yield return www;
-        www.LoadImageIntoTexture(image);
-        yield return null;
     }
 }
 
