@@ -27,11 +27,14 @@ public class Manager : MonoBehaviour
     private bool aimDown = false;
     private bool isAnotherUIActive = false;
     private Camera photoCamera;
-    private int currentGameMode;
+    private int currentGameMode = 0;
 
     void Start()
     {
-		System.IO.Directory.CreateDirectory (Application.persistentDataPath + "/Photos/");
+		if (System.IO.Directory.Exists (Application.persistentDataPath + "/Photos/") != true) {
+			Debug.Log ("Creating Photos Directory");
+			System.IO.Directory.CreateDirectory (Application.persistentDataPath + "/Photos/");
+		}
         photoCamera = secondaryCam.GetComponent<Camera>();
         LockMouse.Lock();
         Time.timeScale = 1;
