@@ -92,7 +92,7 @@ public class Manager : MonoBehaviour
             byte[] bytes = screenShot.EncodeToPNG();
 			string filename = ScreenShotName (currentGameMode, NumberOfPhotos ());
 			System.IO.File.WriteAllBytes(filename, bytes);
-            Debug.Log(string.Format("Took screenshot to: {0}", filename));
+            Debug.Log(string.Format("Took picture to: {0}", filename));
         }
     }
 
