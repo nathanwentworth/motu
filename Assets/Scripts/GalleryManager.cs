@@ -15,7 +15,7 @@ public class GalleryManager : MonoBehaviour {
 
 
     void Start(){
-        numberOfPanels = (NumberOfPhotos() / 9) + 1;
+        numberOfPanels = (NumberOfPhotos() / 10) + 1;
         PhotosArray();
         CreatePanels();
         for (int i = 0; i < NumberOfPhotos(); i++) {
@@ -49,7 +49,7 @@ public class GalleryManager : MonoBehaviour {
         for(int i = 0; i < numberOfPanels; i++)
         {
             Page = Instantiate(panel);
-            Page.transform.SetParent(canvas.transform);
+            Page.transform.SetParent(canvas.transform, false);
             Page.transform.localPosition = Vector3.zero;
         }
     }
@@ -62,7 +62,7 @@ public class GalleryManager : MonoBehaviour {
 		www.LoadImageIntoTexture(image);
 		GameObject photo = Instantiate (photoTemplate);
         Debug.Log(string.Format("Creating photo {0}.", photoNumber));
-		photo.transform.SetParent (Page.transform);
+		photo.transform.SetParent (Page.transform, false);
 		photo.GetComponent<RawImage>().texture = image;
 		photo.transform.localPosition = Vector3.zero;
 		yield return null;
