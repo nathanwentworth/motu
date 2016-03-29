@@ -1,23 +1,25 @@
 ﻿using UnityEngine;
-using System.Collections;
-using UnityEngine.UI;
-using System.IO;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
 
 public class GalleryManager : MonoBehaviour {
 
 	public GameObject photoTemplate;
 	public GameObject canvas;
     public GameObject panel;
+
     private FileInfo[] allFiles;
-    private int numberOfPanels = 0;
-    private GameObject Page;
+    List<GameObject> Page = new List<GameObject>();
+    private int numberOfPages = -1;
+    private int activePage = 0;
 
 
     void Start(){
-        numberOfPanels = (NumberOfPhotos() / 10) + 1;
         PhotosArray();
-        CreatePanels();
+        CreateNewPage();
         for (int i = 0; i < NumberOfPhotos(); i++) {
             StartCoroutine (CreateImages (i));
 		}
@@ -44,26 +46,57 @@ public class GalleryManager : MonoBehaviour {
         SceneManager.LoadScene("GalleryTest");
     }
 
-    public void CreatePanels()
+    public void CreateNewPage()
     {
-        for(int i = 0; i < numberOfPanels; i++)
+        numberOfPages++;
+        Debug.Log(string.Format("Creating panel number {0}.", numberOfPages));
+        GameObject pageClone = Instantiate(panel) as GameObject;
+        Page.Add(pageClone);
+        Page[numberOfPages].transform.SetParent(canvas.transform, false);
+        Page[numberOfPages].transform.localPosition = Vector3.zero;
+    }
+
+    public void NextPage()
+    {
+        if(activePage != numberOfPages)
         {
-            Page = Instantiate(panel);
-            Page.transform.SetParent(canvas.transform, false);
-            Page.transform.localPosition = Vector3.zero;
+            Page[activePage].SetActive(false);
+            activePage++;
+            Page[activePage].SetActive(true);
+        }
+    }
+
+    public void LastPage()
+    {
+        if(activePage != 0)
+        {
+            Page[activePage].SetActive(false);
+            activePage--;
+            Page[activePage].SetActive(true);
         }
     }
 
     IEnumerator CreateImages(int photoNumber)
 	{
+        //Upload the file into the game
 		Texture2D image = new Texture2D(2, 2);
         WWW www = new WWW("file://" + allFiles[photoNumber].ToString());
         yield return www;
-		www.LoadImageIntoTexture(image);
-		GameObject photo = Instantiate (photoTemplate);
+        //Load it as a texture
+        www.LoadImageIntoTexture(image);
+        //Create photo in game
+        GameObject photo = Instantiate (photoTemplate);
         Debug.Log(string.Format("Creating photo {0}.", photoNumber));
-		photo.transform.SetParent (Page.transform, false);
-		photo.GetComponent<RawImage>().texture = image;
+        //Put it in the proper page
+        if(photoNumber / 9 == numberOfPages + 1)
+        {
+            CreateNewPage();
+            Page[numberOfPages].SetActive(false);
+        }
+        photo.transform.SetParent (Page[numberOfPages].transform, false);
+        Debug.Log(string.Format("Adding photo {0} to panel {1}", photoNumber, numberOfPages));
+        //Set the texture to the photo
+        photo.GetComponent<RawImage>().texture = image;
 		photo.transform.localPosition = Vector3.zero;
 		yield return null;
 	}
