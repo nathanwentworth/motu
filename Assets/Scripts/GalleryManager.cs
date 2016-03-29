@@ -28,7 +28,7 @@ public class GalleryManager : MonoBehaviour {
 	public static int NumberOfPhotos()
 	{
 		int totalFiles = 0;
-		totalFiles = Directory.GetFiles(Application.persistentDataPath + "/Photos/", "MOTU*.png").Length;
+		totalFiles = Directory.GetFiles(Application.persistentDataPath + "/Photos/", "TitleHere*.png").Length;
 		return totalFiles;
 	}
 
@@ -38,13 +38,13 @@ public class GalleryManager : MonoBehaviour {
         allFiles = di.GetFiles();
     }
 
-    public void DeleteAllPhotos()
-    {
-        Directory.Delete(Application.persistentDataPath + "/Photos/", true);
-        Directory.CreateDirectory(Application.persistentDataPath + "/Photos/");
-        Debug.Log("All photos deleted.");
-        SceneManager.LoadScene("GalleryTest");
-    }
+    //public void DeleteAllPhotos()
+    //{
+    //    Directory.Delete(Application.persistentDataPath + "/Photos/", true);
+    //    Directory.CreateDirectory(Application.persistentDataPath + "/Photos/");
+    //    Debug.Log("All photos deleted.");
+    //    SceneManager.LoadScene("GalleryTest");
+    //}
 
     public void CreateNewPage()
     {
@@ -53,7 +53,7 @@ public class GalleryManager : MonoBehaviour {
         GameObject pageClone = Instantiate(panel) as GameObject;
         Page.Add(pageClone);
         Page[numberOfPages].transform.SetParent(canvas.transform, false);
-        Page[numberOfPages].transform.localPosition = Vector3.zero;
+        Page[numberOfPages].transform.localPosition = new Vector3(-25, 0, 0);
     }
 
     public void NextPage()
@@ -74,6 +74,21 @@ public class GalleryManager : MonoBehaviour {
             activePage--;
             Page[activePage].SetActive(true);
         }
+    }
+
+    public void DeletePhoto()
+    {
+        Debug.Log("Deleting photo....");
+    }
+
+    public void SavePhoto()
+    {
+        Debug.Log("Saving photo....");
+    }
+
+    public void ViewPhoto()
+    {
+        Debug.Log("Enlarging photo....");
     }
 
     IEnumerator CreateImages(int photoNumber)

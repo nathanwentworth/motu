@@ -90,15 +90,15 @@ public class Manager : MonoBehaviour
             RenderTexture.active = null; // JC: added to avoid errors
             Destroy(rt);
             byte[] bytes = screenShot.EncodeToPNG();
-			string filename = ScreenShotName (currentGameMode, NumberOfPhotos ());
+			string filename = ScreenShotName (currentGameMode);
 			System.IO.File.WriteAllBytes(filename, bytes);
             Debug.Log(string.Format("Took picture to: {0}", filename));
         }
     }
 
-    public static string ScreenShotName(int currentGameMode, int photoNumber)
+    public static string ScreenShotName(int currentGameMode)
     {
-		return string.Format("{0}/MOTUv2_{1}_{2}.png", Application.persistentDataPath + "/Photos/", currentGameMode, photoNumber);
+		return string.Format("{0}/TitleHere_{1}_{2}.png", Application.persistentDataPath + "/Photos", currentGameMode, DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"));
     }
 
     public static int NumberOfPhotos()
