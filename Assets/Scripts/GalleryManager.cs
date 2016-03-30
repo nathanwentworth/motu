@@ -18,6 +18,7 @@ public class GalleryManager : MonoBehaviour {
     private int numberOfPages = -1;
     private int activePage = 0;
     public int currentPhotoHighlighted = -1;
+    public GameObject InputField;
 
 
     void Start(){
@@ -89,11 +90,19 @@ public class GalleryManager : MonoBehaviour {
     public void SavePhoto()
     {
         Debug.Log("Saving photo....");
+#if UNITY_STANDALONE_OSX
         SaveFileDialog save = new SaveFileDialog();
         save.Filter = "PNG Image|*.png";
         save.Title = "Save your photo!";
         save.ShowDialog();
         StartCoroutine(Save(currentPhotoHighlighted, save.FileName));
+#endif
+#if UNITY_STANDALONE_WIN
+        InputField.SetActive(true);
+        string filename = InputField.GetComponent<InputField>().text;
+        StartCoroutine(Save(currentPhotoHighlighted, UnityEngine.Application.dataPath + filename + ".png"));
+        InputField.SetActive(false);
+#endif
     }
 
     public void ViewPhoto()
