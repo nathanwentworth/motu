@@ -13,8 +13,10 @@ public class GalleryManager : MonoBehaviour {
 
     private FileInfo[] allFiles;
     List<GameObject> Page = new List<GameObject>();
+    List<GameObject> Photos = new List<GameObject>();
     private int numberOfPages = -1;
     private int activePage = 0;
+    public int currentPhotoHighlighted = -1;
 
 
     void Start(){
@@ -78,7 +80,9 @@ public class GalleryManager : MonoBehaviour {
 
     public void DeletePhoto()
     {
-        Debug.Log("Deleting photo....");
+        Debug.Log("Deleted photo " + currentPhotoHighlighted.ToString() + ".");
+        File.Delete(allFiles[currentPhotoHighlighted].ToString());
+        Destroy(Photos[currentPhotoHighlighted]);
     }
 
     public void SavePhoto()
@@ -113,6 +117,8 @@ public class GalleryManager : MonoBehaviour {
         //Set the texture to the photo
         photo.GetComponent<RawImage>().texture = image;
 		photo.transform.localPosition = Vector3.zero;
+        photo.GetComponent<PictureSelect>().photoNumber = photoNumber;
+        Photos.Add(photo);
 		yield return null;
 	}
 }
