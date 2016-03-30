@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Windows.Forms;
+
 
 public class GalleryManager : MonoBehaviour {
 
@@ -30,13 +31,13 @@ public class GalleryManager : MonoBehaviour {
 	public static int NumberOfPhotos()
 	{
 		int totalFiles = 0;
-		totalFiles = Directory.GetFiles(Application.persistentDataPath + "/Photos/", "TitleHere*.png").Length;
+		totalFiles = Directory.GetFiles(UnityEngine.Application.persistentDataPath + "/Photos/", "TitleHere*.png").Length;
 		return totalFiles;
 	}
 
    public void PhotosArray()
     {
-        DirectoryInfo di = new DirectoryInfo(Application.persistentDataPath + "/Photos/");
+        DirectoryInfo di = new DirectoryInfo(UnityEngine.Application.persistentDataPath + "/Photos/");
         allFiles = di.GetFiles();
     }
 
@@ -88,6 +89,11 @@ public class GalleryManager : MonoBehaviour {
     public void SavePhoto()
     {
         Debug.Log("Saving photo....");
+        SaveFileDialog save = new SaveFileDialog();
+        save.Filter = "PNG Image|*.png";
+        save.Title = "Save your photo!";
+        save.ShowDialog();
+        StartCoroutine(Save(currentPhotoHighlighted, save.FileName));
     }
 
     public void ViewPhoto()
@@ -121,4 +127,16 @@ public class GalleryManager : MonoBehaviour {
         Photos.Add(photo);
 		yield return null;
 	}
+
+    IEnumerator Save(int photoNumber, string path)
+    {
+        Texture2D image = new Texture2D(2, 2);
+        WWW www = new WWW("file://" + allFiles[photoNumber].ToString());
+        yield return www;
+        //Load it as a texture
+        www.LoadImageIntoTexture(image);
+        byte[] bytes = image.EncodeToPNG();
+        File.WriteAllBytes(path, bytes);
+        yield return null;
+    }
 }
