@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -13,6 +14,9 @@ public class GalleryManager : MonoBehaviour {
     public GameObject panel;
     public GameObject LightBox;
     public GameObject LightBoxPhoto;
+    public GameObject DeleteButton;
+    public GameObject SaveButton;
+    public GameObject ViewButton;
 
     private FileInfo[] allFiles;
     List<GameObject> Page = new List<GameObject>();
@@ -20,7 +24,7 @@ public class GalleryManager : MonoBehaviour {
     private int numberOfPages = -1;
     private int activePage = 0;
     public int currentPhotoHighlighted = -1;
-
+    private bool somethingIsSelected;
 
     void Start(){
         PhotosArray();
@@ -29,6 +33,22 @@ public class GalleryManager : MonoBehaviour {
             StartCoroutine (CreateImages (i));
 		}
 	}
+
+    void Update()
+    {
+        if(currentPhotoHighlighted < 0)
+        {
+            DeleteButton.SetActive(false);
+            SaveButton.SetActive(false);
+            ViewButton.SetActive(false);
+        }
+        else
+        {
+            DeleteButton.SetActive(true);
+            SaveButton.SetActive(true);
+            ViewButton.SetActive(true);
+        }
+    }
 
 	public static int NumberOfPhotos()
 	{
@@ -55,6 +75,7 @@ public class GalleryManager : MonoBehaviour {
 
     public void NextPage()
     {
+        currentPhotoHighlighted = -1;
         if(activePage != numberOfPages)
         {
             Page[activePage].SetActive(false);
@@ -63,9 +84,16 @@ public class GalleryManager : MonoBehaviour {
         }
     }
 
+    public void ClickOffSomething()
+    {
+        currentPhotoHighlighted = -1;
+        Debug.Log("Clicked on nothing.");
+    }
+
     public void LastPage()
     {
-        if(activePage != 0)
+        currentPhotoHighlighted = -1;
+        if (activePage != 0)
         {
             Page[activePage].SetActive(false);
             activePage--;
@@ -75,6 +103,7 @@ public class GalleryManager : MonoBehaviour {
 
     public void DeletePhoto()
     {
+        SceneManager.LoadScene("GalleryTest");
         Debug.Log("Deleted photo " + currentPhotoHighlighted.ToString() + ".");
         File.Delete(allFiles[currentPhotoHighlighted].ToString());
         Destroy(Photos[currentPhotoHighlighted]);
