@@ -12,20 +12,20 @@ public class Manager : MonoBehaviour
     public bool enableMovement = true;
 
     [Header("Public Variables")]
-    public int resWidth = 2550;
-    public int resHeight = 3300;
+    private float resWidth = 0;
+    private float resHeight = 0;
 
     [Header("GameObject References")]
     //public GameObject pauseBG;
-    public GameObject ui_CameraUI;
+    //public GameObject ui_CameraUI;
     public GameObject secondaryCam;
 
     [Header("Audio References")]
     public AudioSource[] CameraClicks;
 
     //Private Fields
-    private bool aimDown = false;
-    private bool isAnotherUIActive = false;
+    //private bool aimDown = false;
+    //private bool isAnotherUIActive = false;
     private Camera photoCamera;
     private int currentGameMode = 0;
 
@@ -39,26 +39,36 @@ public class Manager : MonoBehaviour
         LockMouse.Lock();
         Time.timeScale = 1;
         AudioListener.pause = false;
-        ui_CameraUI.SetActive(false);
+        //ui_CameraUI.SetActive(false);
+        resWidth = Screen.currentResolution.width;
+        resHeight = Screen.currentResolution.height;
+        Debug.Log(string.Format("The width of your screen is {0} and the height of your screen is {1}.", resWidth, resHeight));
+    }
+
+    void FixedUpdate()
+    {
+        //Look for changes in screen resolution
+        resWidth = Screen.currentResolution.width;
+        resHeight = Screen.currentResolution.height;
     }
 
     void Update()
     {
         //INPUTS
         //AimDown Camera
-        if (Input.GetButton("Fire2") && !isAnotherUIActive)
-        {
-            aimDown = true;
-            isAnotherUIActive = true;
-            ui_CameraUI.SetActive(true);
-        }
-        //Un-aim Camera
-        else if (!Input.GetButton("Fire2") && aimDown)
-        {
-            isAnotherUIActive = false;
-            aimDown = false;
-            ui_CameraUI.SetActive(false);
-        }
+        //if (Input.GetButton("Fire2") && !isAnotherUIActive)
+        //{
+        //    aimDown = true;
+        //    isAnotherUIActive = true;
+        //    ui_CameraUI.SetActive(true);
+        //}
+        ////Un-aim Camera
+        //else if (!Input.GetButton("Fire2") && aimDown)
+        //{
+        //    isAnotherUIActive = false;
+        //    aimDown = false;
+        //    ui_CameraUI.SetActive(false);
+        //}
         //Pause the game
         //if (Input.GetKeyDown(KeyCode.Escape) && !isAnotherUIActive && Time.timeScale == 1.0f)
         //{
@@ -77,12 +87,12 @@ public class Manager : MonoBehaviour
         //    pauseBG.SetActive(false);
         //    AudioListener.pause = false;
         //}
-        //Take a picture but only if the camera is aimed down
-        if (Input.GetButtonDown("Fire1") && aimDown)
+        //Take a picture 
+        if (Input.GetButtonDown("Fire1"))
         {
-            RenderTexture rt = new RenderTexture(resWidth, resHeight, 24);
+            RenderTexture rt = new RenderTexture((int)resWidth, (int)resHeight, 24);
             photoCamera.targetTexture = rt;
-            Texture2D screenShot = new Texture2D(resWidth, resHeight, TextureFormat.RGB24, false);
+            Texture2D screenShot = new Texture2D((int)resWidth, (int)resHeight, TextureFormat.RGB24, false);
             photoCamera.Render();
             RenderTexture.active = rt;
             screenShot.ReadPixels(new Rect(0, 0, resWidth, resHeight), 0, 0);

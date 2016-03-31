@@ -11,6 +11,8 @@ public class GalleryManager : MonoBehaviour {
 	public GameObject photoTemplate;
 	public GameObject canvas;
     public GameObject panel;
+    public GameObject LightBox;
+    public GameObject LightBoxPhoto;
 
     private FileInfo[] allFiles;
     List<GameObject> Page = new List<GameObject>();
@@ -18,7 +20,6 @@ public class GalleryManager : MonoBehaviour {
     private int numberOfPages = -1;
     private int activePage = 0;
     public int currentPhotoHighlighted = -1;
-    public GameObject InputField;
 
 
     void Start(){
@@ -36,19 +37,11 @@ public class GalleryManager : MonoBehaviour {
 		return totalFiles;
 	}
 
-   public void PhotosArray()
+    public void PhotosArray()
     {
         DirectoryInfo di = new DirectoryInfo(UnityEngine.Application.persistentDataPath + "/Photos/");
         allFiles = di.GetFiles();
     }
-
-    //public void DeleteAllPhotos()
-    //{
-    //    Directory.Delete(Application.persistentDataPath + "/Photos/", true);
-    //    Directory.CreateDirectory(Application.persistentDataPath + "/Photos/");
-    //    Debug.Log("All photos deleted.");
-    //    SceneManager.LoadScene("GalleryTest");
-    //}
 
     public void CreateNewPage()
     {
@@ -90,24 +83,43 @@ public class GalleryManager : MonoBehaviour {
     public void SavePhoto()
     {
         Debug.Log("Saving photo....");
-#if UNITY_STANDALONE_OSX
-        SaveFileDialog save = new SaveFileDialog();
-        save.Filter = "PNG Image|*.png";
-        save.Title = "Save your photo!";
-        save.ShowDialog();
-        StartCoroutine(Save(currentPhotoHighlighted, save.FileName));
-#endif
-#if UNITY_STANDALONE_WIN
-        InputField.SetActive(true);
-        string filename = InputField.GetComponent<InputField>().text;
-        StartCoroutine(Save(currentPhotoHighlighted, UnityEngine.Application.dataPath + filename + ".png"));
-        InputField.SetActive(false);
-#endif
+        if (UnityEngine.Application.platform == RuntimePlatform.WindowsPlayer || UnityEngine.Application.platform == RuntimePlatform.WindowsEditor) {
+            SaveFileDialog save = new SaveFileDialog();
+            save.Filter = "PNG Image|*.png";
+            save.Title = "Save your photo!";
+            save.ShowDialog();
+            StartCoroutine(Save(currentPhotoHighlighted, save.FileName));
+        }
+        else 
+        {
+            string filename = Path.GetFileName(allFiles[currentPhotoHighlighted].ToString());
+            StartCoroutine(Save(currentPhotoHighlighted, UnityEngine.Application.dataPath + "/" + filename));
+        }
     }
 
     public void ViewPhoto()
     {
-        Debug.Log("Enlarging photo....");
+        StartCoroutine(CreateLightBoxImage(currentPhotoHighlighted));
+    }
+
+    public void CloseLightbox()
+    {
+        LightBox.SetActive(false);
+    }
+
+    IEnumerator CreateLightBoxImage(int photoNumber)
+    {
+        //Upload the file into the game
+        Texture2D image = new Texture2D(2, 2);
+        WWW www = new WWW("file://" + allFiles[photoNumber].ToString());
+        yield return www;
+        //Load it as a texture
+        www.LoadImageIntoTexture(image);
+        //Set the texture to the photo
+        LightBoxPhoto.GetComponent<RawImage>().texture = image;
+        yield return LightBoxPhoto;
+        LightBox.SetActive(true);
+        yield return null;
     }
 
     IEnumerator CreateImages(int photoNumber)
@@ -146,6 +158,7 @@ public class GalleryManager : MonoBehaviour {
         www.LoadImageIntoTexture(image);
         byte[] bytes = image.EncodeToPNG();
         File.WriteAllBytes(path, bytes);
+        Debug.Log("Saving photo to " + path);
         yield return null;
     }
 }
