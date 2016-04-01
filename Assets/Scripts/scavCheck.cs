@@ -1,15 +1,23 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class scavCheck : MonoBehaviour {
 
 	private static System.Random rng = new System.Random();  
 	List<scavItems> items = new List<scavItems>();
 
+	public Text instructions;
+	public GameObject instructionsPanel;
+	public AnimationCurve fade;
+
+	private float timer = 0;
+	private bool fadePanel;
 
 	void Start () {
-		
+
+		Time.timeScale = 0;
 
 		items.Add( new scavItems("Cube_1", "First Cube"));
 		items.Add( new scavItems("Cube_2", "Second Cube"));
@@ -18,7 +26,7 @@ public class scavCheck : MonoBehaviour {
 		items.Add( new scavItems("Cube_5", "Fifth Cube"));
 		items.Add( new scavItems("Cube_6", "Sixth Cube"));
 
-    int n = items.Count;  
+    int n = items.Count;
     while (n > 1) {  
       n--;  
       int k = rng.Next(n + 1);  
@@ -33,6 +41,8 @@ public class scavCheck : MonoBehaviour {
     for (int i = 0; i < 3; i++) {
     	print (items[i].nameReadable);
     }
+
+    instructions.text = "FIND THESE THINGS: \n" + items[1].nameReadable.ToUpper() + ",\n" + items[2].nameReadable.ToUpper() + ",\n" + items[3].nameReadable.ToUpper();
 	}
 
 	void Update() {
@@ -49,5 +59,21 @@ public class scavCheck : MonoBehaviour {
     		}
 			}		
 		}
+
+		if (fadePanel) {
+			Time.timeScale = 1;
+			timer += Time.unscaledDeltaTime;
+			print (timer);
+			instructionsPanel.GetComponent<CanvasGroup>().alpha = fade.Evaluate(timer);
+			if (timer >= 1) 
+				fadePanel = false;
+		}
+
 	}
+
+
+	public void FadePanel() {
+		fadePanel = true;
+	}
+
 }
