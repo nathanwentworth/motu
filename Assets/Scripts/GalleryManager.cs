@@ -71,6 +71,7 @@ public class GalleryManager : MonoBehaviour {
         Page.Add(pageClone);
         Page[numberOfPages].transform.SetParent(canvas.transform, false);
         Page[numberOfPages].transform.localPosition = new Vector3(-25, 0, 0);
+        Page[numberOfPages].name = "Page" + numberOfPages.ToString();
     }
 
     public void NextPage()
@@ -103,10 +104,22 @@ public class GalleryManager : MonoBehaviour {
 
     public void DeletePhoto()
     {
-        SceneManager.LoadScene("GalleryTest");
         Debug.Log("Deleted photo " + currentPhotoHighlighted.ToString() + ".");
         File.Delete(allFiles[currentPhotoHighlighted].ToString());
         Destroy(Photos[currentPhotoHighlighted]);
+        Photos.RemoveAt(currentPhotoHighlighted);
+        for (int i = 0; i < Photos.Count; i++)
+        {
+            Photos[i].GetComponent<PictureSelect>().photoNumber = i;
+            Photos[i].name = "photo" + i.ToString();
+        }
+        for (int i = activePage; i < numberOfPages; i++)
+        {
+            int temp = (i + 1) * 8;
+            Photos[temp].transform.SetParent(null);
+            Photos[temp].transform.SetParent(Page[i].transform);
+        }
+        currentPhotoHighlighted = -1;
     }
 
     public void SavePhoto()
@@ -174,6 +187,7 @@ public class GalleryManager : MonoBehaviour {
         photo.GetComponent<RawImage>().texture = image;
 		photo.transform.localPosition = Vector3.zero;
         photo.GetComponent<PictureSelect>().photoNumber = photoNumber;
+        photo.name = "photo" + photoNumber.ToString();
         Photos.Add(photo);
 		yield return null;
 	}
