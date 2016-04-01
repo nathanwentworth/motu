@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class PictureSelect : MonoBehaviour {
 
-    public int photoNumber = -1;
+    public int photoNumber = 0;
     private GalleryManager gallery;
     
     void Start()
@@ -15,6 +15,6 @@ public class PictureSelect : MonoBehaviour {
 	public void Highlight()
     {
         Debug.Log("Selected picture " + photoNumber.ToString()+".");
-        gallery.currentPhotoHighlighted = photoNumber;
+        gallery.currentlySelectedPhoto = photoNumber;
     }
 }

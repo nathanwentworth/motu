@@ -9,34 +9,41 @@ using System.Windows.Forms;
 
 public class GalleryManager : MonoBehaviour {
 
-	public GameObject photoTemplate;
-	public GameObject canvas;
-    public GameObject panel;
+    [Header("GameObject References")]
+	public GameObject PhotoPrefab;
+	public GameObject Container;
+    public GameObject PagePrefab;
     public GameObject LightBox;
     public GameObject LightBoxPhoto;
+    public GameObject BackButton;
+    public GameObject NextButton;
     public GameObject DeleteButton;
     public GameObject SaveButton;
     public GameObject ViewButton;
-
+    [Header("Currently Selected Photo")]
+    public int currentlySelectedPhoto = 0;
+    //Private fields
+    private List<GameObject> PagesList = new List<GameObject>();
+    private List<GameObject> PhotosList = new List<GameObject>();
     private FileInfo[] allFiles;
-    List<GameObject> Page = new List<GameObject>();
-    List<GameObject> Photos = new List<GameObject>();
-    private int numberOfPages = -1;
-    private int activePage = 0;
-    public int currentPhotoHighlighted = -1;
-    private bool somethingIsSelected;
+    private int numberOfPages = 0;
+    private int activePage = 1;
 
     void Start(){
         PhotosArray();
-        CreateNewPage();
-        for (int i = 0; i < NumberOfPhotos(); i++) {
-            StartCoroutine (CreateImages (i));
-		}
-	}
+        if (allFiles.Length > 0)
+        {
+            CreateNewPage();
+            for (int i = 0; i < NumberOfPhotos(); i++)
+            {
+                StartCoroutine(CreateImages(i));
+            }
+        }
+    }
 
     void Update()
     {
-        if(currentPhotoHighlighted < 0)
+        if(currentlySelectedPhoto < 1)
         {
             DeleteButton.SetActive(false);
             SaveButton.SetActive(false);
@@ -48,9 +55,98 @@ public class GalleryManager : MonoBehaviour {
             SaveButton.SetActive(true);
             ViewButton.SetActive(true);
         }
+        if (activePage == 1)
+        {
+            BackButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
+        }
+        else
+        {
+            BackButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
+        }
+        if (activePage == numberOfPages)
+        {
+            NextButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
+        }
+        else
+        {
+            NextButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
+        }
     }
 
-	public static int NumberOfPhotos()
+    public void Back()
+    {
+        currentlySelectedPhoto = 0;
+        if (activePage != 1)
+        {
+            PagesList[activePage - 1].SetActive(false);
+            activePage--;
+            Debug.Log("Going to page " + activePage + ".");
+            PagesList[activePage - 1].SetActive(true);
+        }
+    }
+
+    public void ClickedNothing()
+    {
+        currentlySelectedPhoto = 0;
+        Debug.Log("Clicked on nothing.");
+    }
+
+    public void CloseLightbox()
+    {
+        LightBox.SetActive(false);
+    }
+
+    public void CreateNewPage()
+    {
+        numberOfPages++;
+        Debug.Log(string.Format("Creating page number {0}.", numberOfPages));
+        GameObject pageClone = Instantiate(PagePrefab) as GameObject;
+        PagesList.Add(pageClone);
+        PagesList[numberOfPages - 1].transform.SetParent(Container.transform, false);
+        PagesList[numberOfPages - 1].transform.localPosition = new Vector3(-25, 0, 0);
+        PagesList[numberOfPages - 1].name = "Page " + numberOfPages.ToString();
+    }
+
+    public void DeletePhoto()
+    {
+        File.Delete(allFiles[currentlySelectedPhoto - 1].ToString());
+        Destroy(PhotosList[currentlySelectedPhoto - 1]);
+        PhotosList.RemoveAt(currentlySelectedPhoto - 1);
+        for (int i = 0; i < PhotosList.Count; i++)
+        {
+            PhotosList[i].GetComponent<PictureSelect>().photoNumber = i + 1;
+            PhotosList[i].name = "Photo " + (i + 1).ToString();
+        }
+        for (int i = activePage; i < numberOfPages; i++)
+        {
+            int temp = i * 9;
+            PhotosList[temp - 1].transform.SetParent(null);
+            PhotosList[temp - 1].transform.SetParent(PagesList[i - 1].transform);
+        }
+        if (PhotosList.Count == ((numberOfPages - 1) * 9))
+        {
+            Destroy(PagesList[numberOfPages - 1]);
+            PagesList.RemoveAt(numberOfPages - 1);
+            numberOfPages--;
+        }
+        PhotosArray();
+        Debug.Log("Deleted photo " + currentlySelectedPhoto.ToString() + ".");
+        currentlySelectedPhoto = 0;
+    }
+
+    public void Next()
+    {
+        currentlySelectedPhoto = 0;
+        if (activePage != numberOfPages)
+        {
+            PagesList[activePage - 1].SetActive(false);
+            activePage++;
+            Debug.Log("Going to page " + activePage + ".");
+            PagesList[activePage - 1].SetActive(true);
+        }
+    }
+
+    public static int NumberOfPhotos()
 	{
 		int totalFiles = 0;
 		totalFiles = Directory.GetFiles(UnityEngine.Application.persistentDataPath + "/Photos/", "TitleHere*.png").Length;
@@ -63,106 +159,26 @@ public class GalleryManager : MonoBehaviour {
         allFiles = di.GetFiles();
     }
 
-    public void CreateNewPage()
-    {
-        numberOfPages++;
-        Debug.Log(string.Format("Creating panel number {0}.", numberOfPages));
-        GameObject pageClone = Instantiate(panel) as GameObject;
-        Page.Add(pageClone);
-        Page[numberOfPages].transform.SetParent(canvas.transform, false);
-        Page[numberOfPages].transform.localPosition = new Vector3(-25, 0, 0);
-        Page[numberOfPages].name = "Page " + numberOfPages.ToString();
-    }
-
-    public void NextPage()
-    {
-        currentPhotoHighlighted = -1;
-        if(activePage != numberOfPages)
-        {
-            Page[activePage].SetActive(false);
-            activePage++;
-            Page[activePage].SetActive(true);
-        }
-    }
-
-    public void ClickOffSomething()
-    {
-        currentPhotoHighlighted = -1;
-        Debug.Log("Clicked on nothing.");
-    }
-
-    public void LastPage()
-    {
-        currentPhotoHighlighted = -1;
-        if (activePage != 0)
-        {
-            Page[activePage].SetActive(false);
-            activePage--;
-            Page[activePage].SetActive(true);
-        }
-    }
-
-    public void DeletePhoto()
-    {
-        Debug.Log("Deleted photo " + currentPhotoHighlighted.ToString() + ".");
-        File.Delete(allFiles[currentPhotoHighlighted].ToString());
-        Destroy(Photos[currentPhotoHighlighted]);
-        Photos.RemoveAt(currentPhotoHighlighted);
-        for (int i = 0; i < Photos.Count; i++)
-        {
-            Photos[i].GetComponent<PictureSelect>().photoNumber = i;
-            Photos[i].name = "Photo " + i.ToString();
-        }
-        for (int i = activePage; i < numberOfPages; i++)
-        {
-            int temp = (i + 1) * 8;
-            Photos[temp].transform.SetParent(null);
-            Photos[temp].transform.SetParent(Page[i].transform);
-        }
-        PhotosArray();
-        currentPhotoHighlighted = -1;
-    }
-
     public void SavePhoto()
     {
         Debug.Log("Saving photo....");
         if (UnityEngine.Application.platform == RuntimePlatform.WindowsPlayer || UnityEngine.Application.platform == RuntimePlatform.WindowsEditor) {
             SaveFileDialog save = new SaveFileDialog();
             save.Filter = "PNG Image|*.png";
-            save.Title = "Save your photo!";
+            save.Title = "Select where to save your photo!";
             save.ShowDialog();
-            StartCoroutine(Save(currentPhotoHighlighted, save.FileName));
+            StartCoroutine(Save(currentlySelectedPhoto, save.FileName));
         }
         else 
         {
-            string filename = Path.GetFileName(allFiles[currentPhotoHighlighted].ToString());
-            StartCoroutine(Save(currentPhotoHighlighted, UnityEngine.Application.dataPath + "/" + filename));
+            string filename = Path.GetFileName(allFiles[currentlySelectedPhoto].ToString());
+            StartCoroutine(Save(currentlySelectedPhoto, UnityEngine.Application.dataPath + "/" + filename));
         }
     }
 
     public void ViewPhoto()
     {
-        StartCoroutine(CreateLightBoxImage(currentPhotoHighlighted));
-    }
-
-    public void CloseLightbox()
-    {
-        LightBox.SetActive(false);
-    }
-
-    IEnumerator CreateLightBoxImage(int photoNumber)
-    {
-        //Upload the file into the game
-        Texture2D image = new Texture2D(2, 2);
-        WWW www = new WWW("file://" + allFiles[photoNumber].ToString());
-        yield return www;
-        //Load it as a texture
-        www.LoadImageIntoTexture(image);
-        //Set the texture to the photo
-        LightBoxPhoto.GetComponent<RawImage>().texture = image;
-        yield return LightBoxPhoto;
-        LightBox.SetActive(true);
-        yield return null;
+        StartCoroutine(CreateLightBoxImage(currentlySelectedPhoto));
     }
 
     IEnumerator CreateImages(int photoNumber)
@@ -174,29 +190,44 @@ public class GalleryManager : MonoBehaviour {
         //Load it as a texture
         www.LoadImageIntoTexture(image);
         //Create photo in game
-        GameObject photo = Instantiate (photoTemplate);
-        Debug.Log(string.Format("Creating photo {0}.", photoNumber));
+        GameObject photo = Instantiate (PhotoPrefab);
+        Debug.Log(string.Format("Creating photo {0}.", photoNumber + 1));
         //Put it in the proper page
-        if(photoNumber / 9 == numberOfPages + 1)
+        if(photoNumber / 9 == numberOfPages)
         {
             CreateNewPage();
-            Page[numberOfPages].SetActive(false);
+            PagesList[numberOfPages - 1].SetActive(false);
         }
-        photo.transform.SetParent (Page[numberOfPages].transform, false);
-        Debug.Log(string.Format("Adding photo {0} to panel {1}", photoNumber, numberOfPages));
+        photo.transform.SetParent (PagesList[numberOfPages - 1].transform, false);
+        Debug.Log(string.Format("Adding photo {0} to page {1}.", photoNumber + 1, numberOfPages));
         //Set the texture to the photo
         photo.GetComponent<RawImage>().texture = image;
 		photo.transform.localPosition = Vector3.zero;
-        photo.GetComponent<PictureSelect>().photoNumber = photoNumber;
-        photo.name = "Photo " + photoNumber.ToString();
-        Photos.Add(photo);
+        photo.GetComponent<PictureSelect>().photoNumber = photoNumber + 1;
+        photo.name = "Photo " + (photoNumber + 1).ToString();
+        PhotosList.Add(photo);
 		yield return null;
 	}
+
+    IEnumerator CreateLightBoxImage(int photoNumber)
+    {
+        //Upload the file into the game
+        Texture2D image = new Texture2D(2, 2);
+        WWW www = new WWW("file://" + allFiles[photoNumber - 1].ToString());
+        yield return www;
+        //Load it as a texture
+        www.LoadImageIntoTexture(image);
+        //Set the texture to the photo
+        LightBoxPhoto.GetComponent<RawImage>().texture = image;
+        yield return LightBoxPhoto;
+        LightBox.SetActive(true);
+        yield return null;
+    }
 
     IEnumerator Save(int photoNumber, string path)
     {
         Texture2D image = new Texture2D(2, 2);
-        WWW www = new WWW("file://" + allFiles[photoNumber].ToString());
+        WWW www = new WWW("file://" + allFiles[photoNumber - 1].ToString());
         yield return www;
         //Load it as a texture
         www.LoadImageIntoTexture(image);
