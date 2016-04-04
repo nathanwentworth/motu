@@ -33,7 +33,7 @@ public class GalleryManager : MonoBehaviour {
         PhotosArray();
         if (allFiles.Length > 0)
         {
-            CreateNewPage();
+            //CreateNewPage();
             for (int i = 0; i < NumberOfPhotos(); i++)
             {
                 StartCoroutine(CreateImages(i));
@@ -73,17 +73,17 @@ public class GalleryManager : MonoBehaviour {
         }
     }
 
-    public void Back()
-    {
-        currentlySelectedPhoto = 0;
-        if (activePage != 1)
-        {
-            PagesList[activePage - 1].SetActive(false);
-            activePage--;
-            Debug.Log("Going to page " + activePage + ".");
-            PagesList[activePage - 1].SetActive(true);
-        }
-    }
+    //public void Back()
+    //{
+    //    currentlySelectedPhoto = 0;
+    //    if (activePage != 1)
+    //    {
+    //        PagesList[activePage - 1].SetActive(false);
+    //        activePage--;
+    //        Debug.Log("Going to page " + activePage + ".");
+    //        PagesList[activePage - 1].SetActive(true);
+    //    }
+    //}
 
     public void ClickedNothing()
     {
@@ -96,16 +96,16 @@ public class GalleryManager : MonoBehaviour {
         LightBox.SetActive(false);
     }
 
-    public void CreateNewPage()
-    {
-        numberOfPages++;
-        Debug.Log(string.Format("Creating page number {0}.", numberOfPages));
-        GameObject pageClone = Instantiate(PagePrefab) as GameObject;
-        PagesList.Add(pageClone);
-        PagesList[numberOfPages - 1].transform.SetParent(Container.transform, false);
-        PagesList[numberOfPages - 1].transform.localPosition = new Vector3(-25, 0, 0);
-        PagesList[numberOfPages - 1].name = "Page " + numberOfPages.ToString();
-    }
+    //public void CreateNewPage()
+    //{
+    //    numberOfPages++;
+    //    Debug.Log(string.Format("Creating page number {0}.", numberOfPages));
+    //    GameObject pageClone = Instantiate(PagePrefab) as GameObject;
+    //    PagesList.Add(pageClone);
+    //    PagesList[numberOfPages - 1].transform.SetParent(Container.transform, false);
+    //    PagesList[numberOfPages - 1].transform.localPosition = new Vector3(-25, 0, 0);
+    //    PagesList[numberOfPages - 1].name = "Page " + numberOfPages.ToString();
+    //}
 
     public void DeletePhoto()
     {
@@ -140,17 +140,17 @@ public class GalleryManager : MonoBehaviour {
         currentlySelectedPhoto = 0;
     }
 
-    public void Next()
-    {
-        currentlySelectedPhoto = 0;
-        if (activePage != numberOfPages)
-        {
-            PagesList[activePage - 1].SetActive(false);
-            activePage++;
-            Debug.Log("Going to page " + activePage + ".");
-            PagesList[activePage - 1].SetActive(true);
-        }
-    }
+    //public void Next()
+    //{
+    //    currentlySelectedPhoto = 0;
+    //    if (activePage != numberOfPages)
+    //    {
+    //        PagesList[activePage - 1].SetActive(false);
+    //        activePage++;
+    //        Debug.Log("Going to page " + activePage + ".");
+    //        PagesList[activePage - 1].SetActive(true);
+    //    }
+    //}
 
     public static int NumberOfPhotos()
 	{
@@ -199,13 +199,13 @@ public class GalleryManager : MonoBehaviour {
         GameObject photo = Instantiate (PhotoPrefab);
         Debug.Log(string.Format("Creating photo {0}.", photoNumber + 1));
         //Put it in the proper page
-        if(photoNumber / 9 == numberOfPages)
-        {
-            CreateNewPage();
-            PagesList[numberOfPages - 1].SetActive(false);
-        }
-        photo.transform.SetParent (PagesList[numberOfPages - 1].transform, false);
-        Debug.Log(string.Format("Adding photo {0} to page {1}.", photoNumber + 1, numberOfPages));
+        //if(photoNumber / 9 == numberOfPages)
+        //{
+        //    CreateNewPage();
+        //    PagesList[numberOfPages - 1].SetActive(false);
+        //}
+        //photo.transform.SetParent (PagesList[numberOfPages - 1].transform, false);
+        //Debug.Log(string.Format("Adding photo {0} to page {1}.", photoNumber + 1, numberOfPages));
         //Set the texture to the photo
         photo.GetComponent<RawImage>().texture = image;
 		photo.transform.localPosition = Vector3.zero;
