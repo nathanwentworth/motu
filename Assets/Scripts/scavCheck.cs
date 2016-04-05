@@ -42,11 +42,11 @@ public class scavCheck : MonoBehaviour {
       items[n] = value;  
     }
 
-    // foreach (scavItems i in items) {
-    //   print (i.nameReadable + " " + i.nameItem);
-    // }
     for (int i = 0; i < 3; i++) {
     	print (items[i].nameReadable);
+    }
+    for (int i = items.Count - 1; i >= 3; i--) {
+    	items.RemoveAt(i);
     }
 
     instructions.text = "FIND THESE THINGS: \n" + items[0].nameReadable.ToUpper() + ",\n" + items[1].nameReadable.ToUpper() + ",\n" + items[2].nameReadable.ToUpper();
@@ -76,7 +76,7 @@ public class scavCheck : MonoBehaviour {
 			RaycastHit hit;
 			Ray hitRay = new Ray(transform.position, transform.forward);
 			if (Physics.Raycast(hitRay, out hit)) {
-		    for (int i = 0; i < 3; i++) {
+		    for (int i = items.Count - 1; i >= 0; i--) {
     			if (hit.transform.gameObject.name == items[i].nameItem) {
     				print ("cool dude, you hit " + items[i].nameReadable);
     				items.RemoveAt(i);
@@ -89,7 +89,6 @@ public class scavCheck : MonoBehaviour {
 		if (fadePanel) {
 			Time.timeScale = 1;
 			menuAnimTimer += Time.unscaledDeltaTime;
-			print (menuAnimTimer);
 			instructionsPanel.GetComponent<CanvasGroup>().alpha = fade.Evaluate(menuAnimTimer);
 			if (menuAnimTimer >= 1) 
 				fadePanel = false;
