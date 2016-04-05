@@ -9,15 +9,22 @@ public class scavCheck : MonoBehaviour {
 	List<scavItems> items = new List<scavItems>();
 
 	public Text instructions;
+	public Text timerText;
 	public GameObject instructionsPanel;
 	public AnimationCurve fade;
 
-	private float timer = 0;
+	private float menuAnimTimer = 0;
+	private float timer = 600;
+	private int timerInt;
+	private int huntedCount;
+	private float min;
+	private float sec;
 	private bool fadePanel;
 
 	void Start () {
 
 		Time.timeScale = 0;
+		huntedCount = 0;
 
 		items.Add( new scavItems("Cube_1", "First Cube"));
 		items.Add( new scavItems("Cube_2", "Second Cube"));
@@ -42,10 +49,29 @@ public class scavCheck : MonoBehaviour {
     	print (items[i].nameReadable);
     }
 
-    instructions.text = "FIND THESE THINGS: \n" + items[1].nameReadable.ToUpper() + ",\n" + items[2].nameReadable.ToUpper() + ",\n" + items[3].nameReadable.ToUpper();
+    instructions.text = "FIND THESE THINGS: \n" + items[0].nameReadable.ToUpper() + ",\n" + items[1].nameReadable.ToUpper() + ",\n" + items[2].nameReadable.ToUpper();
 	}
 
 	void Update() {
+
+		if (Time.timeScale == 1) {
+			timer -= Time.unscaledDeltaTime;
+			timer = Mathf.Clamp(timer, 0, 600);
+			timerInt = (int)timer;
+			sec = timerInt % 60;
+			min = timerInt / 60;
+			if (sec > 9) {
+				timerText.text = min + ":" + sec;
+			} else {
+				timerText.text = min + ":0" + sec;				
+			}
+		}
+
+		if (timer <= 0 || huntedCount == 3) {
+			print ("game over!");
+			print (huntedCount);
+		}
+
 		if (Input.GetButtonDown("Fire1")) {
 			RaycastHit hit;
 			Ray hitRay = new Ray(transform.position, transform.forward);
@@ -53,8 +79,8 @@ public class scavCheck : MonoBehaviour {
 		    for (int i = 0; i < 3; i++) {
     			if (hit.transform.gameObject.name == items[i].nameItem) {
     				print ("cool dude, you hit " + items[i].nameReadable);
-					} else {
-						print ("nah, you hit " + hit.transform.gameObject.name);
+    				items.RemoveAt(i);
+    				huntedCount++;
 					}
     		}
 			}		
@@ -62,10 +88,10 @@ public class scavCheck : MonoBehaviour {
 
 		if (fadePanel) {
 			Time.timeScale = 1;
-			timer += Time.unscaledDeltaTime;
-			print (timer);
-			instructionsPanel.GetComponent<CanvasGroup>().alpha = fade.Evaluate(timer);
-			if (timer >= 1) 
+			menuAnimTimer += Time.unscaledDeltaTime;
+			print (menuAnimTimer);
+			instructionsPanel.GetComponent<CanvasGroup>().alpha = fade.Evaluate(menuAnimTimer);
+			if (menuAnimTimer >= 1) 
 				fadePanel = false;
 		}
 
