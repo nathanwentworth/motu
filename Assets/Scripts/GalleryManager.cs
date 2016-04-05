@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -41,37 +40,37 @@ public class GalleryManager : MonoBehaviour {
         }
     }
 
-    void Update()
-    {
-        if(currentlySelectedPhoto < 1)
-        {
-            DeleteButton.SetActive(false);
-            SaveButton.SetActive(false);
-            ViewButton.SetActive(false);
-        }
-        else
-        {
-            DeleteButton.SetActive(true);
-            SaveButton.SetActive(true);
-            ViewButton.SetActive(true);
-        }
-        if (activePage == 1)
-        {
-            BackButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
-        }
-        else
-        {
-            BackButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
-        }
-        if (activePage == numberOfPages)
-        {
-            NextButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
-        }
-        else
-        {
-            NextButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
-        }
-    }
+    //void Update()
+    //{
+    //    if(currentlySelectedPhoto < 1)
+    //    {
+    //        DeleteButton.SetActive(false);
+    //        SaveButton.SetActive(false);
+    //        ViewButton.SetActive(false);
+    //    }
+    //    else
+    //    {
+    //        DeleteButton.SetActive(true);
+    //        SaveButton.SetActive(true);
+    //        ViewButton.SetActive(true);
+    //    }
+    //    if (activePage == 1)
+    //    {
+    //        BackButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
+    //    }
+    //    else
+    //    {
+    //        BackButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
+    //    }
+    //    if (activePage == numberOfPages)
+    //    {
+    //        NextButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
+    //    }
+    //    else
+    //    {
+    //        NextButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
+    //    }
+    //}
 
     //public void Back()
     //{
@@ -201,6 +200,7 @@ public class GalleryManager : MonoBehaviour {
         //photo.transform.SetParent (PagesList[numberOfPages - 1].transform, false);
         //Debug.Log(string.Format("Adding photo {0} to page {1}.", photoNumber + 1, numberOfPages));
         //Set the texture to the photo
+        photo.transform.SetParent(PagePrefab.transform);
         photo.GetComponent<RawImage>().texture = image;
 		photo.transform.localPosition = Vector3.zero;
         photo.GetComponent<PictureSelect>().photoNumber = photoNumber + 1;
