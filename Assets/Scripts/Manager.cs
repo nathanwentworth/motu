@@ -7,17 +7,15 @@ using UnityEngine.SceneManagement;
 
 public class Manager : MonoBehaviour
 {
-
-    [Header("Enable Movement")]
     public bool enableMovement = true;
 
     [Header("Public Variables")]
-    private float resWidth = 0;
-    private float resHeight = 0;
+    public int zoomSensitivity;
 
     [Header("GameObject References")]
     //public GameObject pauseBG;
     //public GameObject ui_CameraUI;
+    public GameObject mainCam;
     public GameObject secondaryCam;
 
     [Header("Audio References")]
@@ -26,6 +24,9 @@ public class Manager : MonoBehaviour
     //Private Fields
     //private bool aimDown = false;
     //private bool isAnotherUIActive = false;
+    private Camera viewCamera;
+    private float resWidth = 0;
+    private float resHeight = 0;
     private Camera photoCamera;
     private int currentGameMode = 0;
 
@@ -35,6 +36,7 @@ public class Manager : MonoBehaviour
 			Debug.Log ("Creating Photos Directory");
 			System.IO.Directory.CreateDirectory (Application.persistentDataPath + "/Photos/");
 		}
+        viewCamera = mainCam.GetComponent<Camera>();
         photoCamera = secondaryCam.GetComponent<Camera>();
         LockMouse.Lock();
         Time.timeScale = 1;
@@ -47,6 +49,10 @@ public class Manager : MonoBehaviour
 
     void FixedUpdate()
     {
+        float zoomValue = Input.GetAxis("Mouse ScrollWheel");
+        viewCamera.fieldOfView = viewCamera.fieldOfView + (-zoomValue * zoomSensitivity);
+        photoCamera.fieldOfView = viewCamera.fieldOfView;
+        Debug.Log(zoomValue);
         //Look for changes in screen resolution
         resWidth = Screen.currentResolution.width;
         resHeight = Screen.currentResolution.height;
