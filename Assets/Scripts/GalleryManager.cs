@@ -55,7 +55,7 @@ public class GalleryManager : MonoBehaviour {
             SaveButton.SetActive(true);
             ViewButton.SetActive(true);
         }
-        if (activePage == 1 || numberOfPages == 0)
+        if (activePage == 1)
         {
             BackButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
         }
@@ -63,7 +63,7 @@ public class GalleryManager : MonoBehaviour {
         {
             BackButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
         }
-        if (activePage == numberOfPages || numberOfPages == 0)
+        if (activePage == numberOfPages)
         {
             NextButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
         }
@@ -128,12 +128,6 @@ public class GalleryManager : MonoBehaviour {
             Destroy(PagesList[numberOfPages - 1]);
             PagesList.RemoveAt(numberOfPages - 1);
             numberOfPages--;
-            if(activePage > numberOfPages && numberOfPages != 0)
-            {
-                activePage--;
-                Debug.Log("Going to page " + activePage + ".");
-                PagesList[activePage - 1].SetActive(true);
-            }
         }
         PhotosArray();
         Debug.Log("Deleted photo " + currentlySelectedPhoto.ToString() + ".");
