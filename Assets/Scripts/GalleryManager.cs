@@ -19,6 +19,8 @@ public class GalleryManager : MonoBehaviour {
     public GameObject DeleteButton;
     public GameObject SaveButton;
     public GameObject ViewButton;
+    public Text PhotosTaken;
+    public Text TripsCompleted;
     [Header("Currently Selected Photo")]
     public int currentlySelectedPhoto = 0;
     //Private fields
@@ -38,6 +40,11 @@ public class GalleryManager : MonoBehaviour {
                 StartCoroutine(CreateImages(i));
             }
         }
+    }
+
+    void Update()
+    {
+        PhotosTaken.text = string.Format("{0} PHOTOS TAKEN", NumberOfPhotos());
     }
 
     //void Update()
