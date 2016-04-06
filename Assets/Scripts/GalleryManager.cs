@@ -212,6 +212,7 @@ public class GalleryManager : MonoBehaviour {
 		photo.transform.localPosition = Vector3.zero;
         photo.GetComponent<PictureSelect>().photoNumber = photoNumber + 1;
         photo.name = "Photo " + (photoNumber + 1).ToString();
+        photo.transform.localScale = Vector3.one;
         PhotosList.Add(photo);
 		yield return null;
 	}
