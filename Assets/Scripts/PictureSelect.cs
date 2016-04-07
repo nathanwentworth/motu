@@ -12,9 +12,19 @@ public class PictureSelect : MonoBehaviour {
         gallery = GameObject.Find("Main Camera").GetComponent<GalleryManager>();
     }
 
-	public void Highlight()
+    public void OnMouseEnter()
+    {
+        transform.GetChild(0).gameObject.SetActive(true);
+    }
+
+    public void OnMouseExit()
+    {
+        transform.GetChild(0).gameObject.SetActive(false);
+    }
+
+	public void OnClick()
     {
         Debug.Log("Selected picture " + photoNumber.ToString()+".");
-        gallery.currentlySelectedPhoto = photoNumber;
+        gallery.ViewPhoto(photoNumber);
     }
 }

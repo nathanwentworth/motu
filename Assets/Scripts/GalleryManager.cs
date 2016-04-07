@@ -182,9 +182,9 @@ public class GalleryManager : MonoBehaviour {
         }
     }
 
-    public void ViewPhoto()
+    public void ViewPhoto(int photoNumber)
     {
-        StartCoroutine(CreateLightBoxImage(currentlySelectedPhoto));
+        print("bloop " + photoNumber);
     }
 
     IEnumerator CreateImages(int photoNumber)
