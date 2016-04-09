@@ -6,11 +6,12 @@ using System.IO;
 using System.Windows.Forms;
 
 
-public class GalleryManager : MonoBehaviour {
+public class GalleryManager : MonoBehaviour
+{
 
     [Header("GameObject References")]
-	public GameObject PhotoPrefab;
-	public GameObject Container;
+    public GameObject PhotoPrefab;
+    public GameObject Container;
     public GameObject PagePrefab;
     public GameObject LightBox;
     public GameObject LightBoxPhoto;
@@ -30,7 +31,8 @@ public class GalleryManager : MonoBehaviour {
     private int numberOfPages = 0;
     private int activePage = 1;
 
-    void Start(){
+    void Start()
+    {
         PhotosArray();
         if (allFiles.Length > 0)
         {
@@ -153,11 +155,11 @@ public class GalleryManager : MonoBehaviour {
     //}
 
     public static int NumberOfPhotos()
-	{
-		int totalFiles = 0;
-		totalFiles = Directory.GetFiles(UnityEngine.Application.persistentDataPath + "/Photos/", "TitleHere*.png").Length;
-		return totalFiles;
-	}
+    {
+        int totalFiles = 0;
+        totalFiles = Directory.GetFiles(UnityEngine.Application.persistentDataPath + "/Photos/", "TitleHere*.png").Length;
+        return totalFiles;
+    }
 
     public void PhotosArray()
     {
@@ -168,14 +170,15 @@ public class GalleryManager : MonoBehaviour {
     public void SavePhoto()
     {
         Debug.Log("Saving photo....");
-        if (UnityEngine.Application.platform == RuntimePlatform.WindowsPlayer || UnityEngine.Application.platform == RuntimePlatform.WindowsEditor) {
+        if (UnityEngine.Application.platform == RuntimePlatform.WindowsPlayer || UnityEngine.Application.platform == RuntimePlatform.WindowsEditor)
+        {
             SaveFileDialog save = new SaveFileDialog();
             save.Filter = "PNG Image|*.png";
             save.Title = "Select where to save your photo!";
             save.ShowDialog();
             StartCoroutine(Save(currentlySelectedPhoto, save.FileName));
         }
-        else 
+        else
         {
             string filename = Path.GetFileName(allFiles[currentlySelectedPhoto].ToString());
             StartCoroutine(Save(currentlySelectedPhoto, UnityEngine.Application.dataPath + "/" + filename));
@@ -188,15 +191,15 @@ public class GalleryManager : MonoBehaviour {
     }
 
     IEnumerator CreateImages(int photoNumber)
-	{
+    {
         //Upload the file into the game
-		Texture2D image = new Texture2D(2, 2);
+        Texture2D image = new Texture2D(2, 2);
         WWW www = new WWW("file://" + allFiles[photoNumber].ToString());
         yield return www;
         //Load it as a texture
         www.LoadImageIntoTexture(image);
         //Create photo in game
-        GameObject photo = Instantiate (PhotoPrefab);
+        GameObject photo = Instantiate(PhotoPrefab);
         Debug.Log(string.Format("Creating photo {0}.", photoNumber + 1));
         //Put it in the proper page
         //if(photoNumber / 9 == numberOfPages)
@@ -209,13 +212,13 @@ public class GalleryManager : MonoBehaviour {
         //Set the texture to the photo
         photo.transform.SetParent(PagePrefab.transform);
         photo.GetComponent<RawImage>().texture = image;
-		photo.transform.localPosition = Vector3.zero;
+        photo.transform.localPosition = Vector3.zero;
         photo.GetComponent<PictureSelect>().photoNumber = photoNumber + 1;
         photo.name = "Photo " + (photoNumber + 1).ToString();
         photo.transform.localScale = Vector3.one;
         PhotosList.Add(photo);
-		yield return null;
-	}
+        yield return null;
+    }
 
     IEnumerator CreateLightBoxImage(int photoNumber)
     {
