@@ -7,11 +7,16 @@ public class MainMenuManager : MonoBehaviour {
 
     public Text LoadingText;
     public GameObject LoadingContainer;
+    private AsyncOperation sync;
+
+    public float timeBetween;
+    
 
 	void Start () {
-        StartCoroutine(LoadingTextChange());
+        Time.timeScale = 1;
         LoadingContainer.SetActive(false);
 	}
+
 
 
     public void FreePlayButton()
@@ -46,29 +51,31 @@ public class MainMenuManager : MonoBehaviour {
 
     IEnumerator LoadingScreen(string whatScene)
     {
+        StartCoroutine(LoadingTextAnimation());
         LoadingContainer.SetActive(true);
-        /*AsyncOperation sync =  SceneManager.LoadSceneAsync(whatScene, LoadSceneMode.Single);
-        yield return sync;
-        yield return new WaitForSeconds(3);*/
+        sync =  SceneManager.LoadSceneAsync(whatScene, LoadSceneMode.Single);
+        sync.allowSceneActivation = false;
+        while(sync.progress < 0.9f)
+        {
+            yield return new WaitForSeconds(0.1f);
+        }
+        yield return new WaitForSeconds(3);
+        sync.allowSceneActivation = true;
         yield return null;
     }
 
-    IEnumerator LoadingTextChange()
+    IEnumerator LoadingTextAnimation()
     {
-        Debug.Log("Starting Coroutine...");
-        yield return new WaitForSeconds(1);
-        Debug.Log("Waited one second");
-        yield return null;
-        /*while(true)
+        while (true)
         {
             LoadingText.text = "Loading";
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(timeBetween);
             LoadingText.text = "Loading.";
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(timeBetween);
             LoadingText.text = "Loading..";
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(timeBetween);
             LoadingText.text = "Loading...";
-            yield return new WaitForSeconds(0.5f);
-        }*/
+            yield return new WaitForSeconds(timeBetween);
+        }
     }
 }
