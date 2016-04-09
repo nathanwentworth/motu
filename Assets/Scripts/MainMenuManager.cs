@@ -9,6 +9,7 @@ public class MainMenuManager : MonoBehaviour {
     public GameObject LoadingContainer;
 
 	void Start () {
+        StartCoroutine(LoadingTextChange());
         LoadingContainer.SetActive(false);
 	}
 
@@ -45,24 +46,29 @@ public class MainMenuManager : MonoBehaviour {
 
     IEnumerator LoadingScreen(string whatScene)
     {
-		LoadingContainer.SetActive(true);
-        AsyncOperation sync =  SceneManager.LoadSceneAsync(whatScene, LoadSceneMode.Single);
-        sync.allowSceneActivation = false;
-		while (true)
+        LoadingContainer.SetActive(true);
+        /*AsyncOperation sync =  SceneManager.LoadSceneAsync(whatScene, LoadSceneMode.Single);
+        yield return sync;
+        yield return new WaitForSeconds(3);*/
+        yield return null;
+    }
+
+    IEnumerator LoadingTextChange()
+    {
+        Debug.Log("Starting Coroutine...");
+        yield return new WaitForSeconds(1);
+        Debug.Log("Waited one second");
+        yield return null;
+        /*while(true)
         {
             LoadingText.text = "Loading";
-            yield return new WaitForSeconds(0.25f);
+            yield return new WaitForSeconds(0.5f);
             LoadingText.text = "Loading.";
-            yield return new WaitForSeconds(0.25f);
+            yield return new WaitForSeconds(0.5f);
             LoadingText.text = "Loading..";
-            yield return new WaitForSeconds(0.25f);
+            yield return new WaitForSeconds(0.5f);
             LoadingText.text = "Loading...";
-            yield return new WaitForSeconds(0.25f);
-			if (sync.isDone) {
-				Debug.Log("Done Loading, padding time.");
-				yield return new WaitForSeconds (3);
-			}
-        }
-        yield return null;
+            yield return new WaitForSeconds(0.5f);
+        }*/
     }
 }
