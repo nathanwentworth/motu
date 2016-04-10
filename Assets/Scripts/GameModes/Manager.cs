@@ -11,15 +11,14 @@ public class Manager : MonoBehaviour
 
     [Header("Public Variables")]
     public int zoomSensitivity;
+    public int zoomMin;
+    public int zoomMax;
 
     [Header("GameObject References")]
-    //public GameObject pauseBG;
+    public GameObject pauseBG;
     //public GameObject ui_CameraUI;
     public GameObject mainCam;
     public GameObject secondaryCam;
-
-    [Header("Audio References")]
-    public AudioSource[] CameraClicks;
 
     //Private Fields
     //private bool aimDown = false;
@@ -29,6 +28,8 @@ public class Manager : MonoBehaviour
     private float resHeight = 0;
     private Camera photoCamera;
     private int currentGameMode = 0;
+    private bool isAnotherUIActive = false;
+    private bool isPaused = false;
 
     void Start()
     {
@@ -44,15 +45,14 @@ public class Manager : MonoBehaviour
         //ui_CameraUI.SetActive(false);
         resWidth = Screen.currentResolution.width;
         resHeight = Screen.currentResolution.height;
-        Debug.Log(string.Format("The width of your screen is {0} and the height of your screen is {1}.", resWidth, resHeight));
     }
 
     void FixedUpdate()
     {
         float zoomValue = Input.GetAxis("Mouse ScrollWheel");
-        viewCamera.fieldOfView = viewCamera.fieldOfView + (-zoomValue * zoomSensitivity);
+        viewCamera.fieldOfView = Mathf.Clamp(viewCamera.fieldOfView + (-zoomValue * zoomSensitivity), zoomMin, zoomMax);
         photoCamera.fieldOfView = viewCamera.fieldOfView;
-        Debug.Log(zoomValue);
+       
         //Look for changes in screen resolution
         resWidth = Screen.currentResolution.width;
         resHeight = Screen.currentResolution.height;
@@ -76,25 +76,17 @@ public class Manager : MonoBehaviour
         //    ui_CameraUI.SetActive(false);
         //}
         //Pause the game
-        //if (Input.GetKeyDown(KeyCode.Escape) && !isAnotherUIActive && Time.timeScale == 1.0f)
-        //{
-        //    isAnotherUIActive = true;
-        //    Time.timeScale = 0.0f;
-        //    mouse.Unlock();
-        //    pauseBG.SetActive(true);
-        //    AudioListener.pause = true;
-        //}
-        ////Unpause game
-        //else if (Input.GetKeyDown(KeyCode.Escape) && Time.timeScale == 0.0f)
-        //{
-        //    isAnotherUIActive = false;
-        //    Time.timeScale = 1.0f;
-        //    mouse.Lock();
-        //    pauseBG.SetActive(false);
-        //    AudioListener.pause = false;
-        //}
+        if (Input.GetKeyDown(KeyCode.Escape) && !isAnotherUIActive && !isPaused)
+        {
+            Pause();
+        }
+        //Unpause game
+        else if (Input.GetKeyDown(KeyCode.Escape) && isPaused)
+        {
+            unPause();
+        }
         //Take a picture 
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButtonDown("Fire1") && !isPaused)
         {
             RenderTexture rt = new RenderTexture((int)resWidth, (int)resHeight, 24);
             photoCamera.targetTexture = rt;
@@ -117,11 +109,29 @@ public class Manager : MonoBehaviour
 		return string.Format("{0}/TitleHere_{1}_{2}.png", Application.persistentDataPath + "/Photos", currentGameMode, DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"));
     }
 
-    public static int NumberOfPhotos()
+    private void Pause()
     {
-        int totalFiles = 0;
-		totalFiles = System.IO.Directory.GetFiles(Application.persistentDataPath + "/Photos/", "MOTU*.png").Length;
-        return totalFiles;
+        isAnotherUIActive = true;
+        isPaused = true;
+        Time.timeScale = 0.0f;
+        LockMouse.Unlock();
+        pauseBG.SetActive(true);
+        AudioListener.pause = true;
+    }
+
+    public void unPause()
+    {
+        isPaused = false;
+        isAnotherUIActive = false;
+        Time.timeScale = 1.0f;
+        LockMouse.Lock();
+        pauseBG.SetActive(false);
+        AudioListener.pause = false;
+    }
+
+    public void ExitToMainMenu()
+    {
+        SceneManager.LoadScene("MainMenuTest");
     }
 }
 

@@ -8,6 +8,8 @@ public class MainMenuManager : MonoBehaviour {
     public Text LoadingText;
     public Slider ProgressBar;
     public GameObject LoadingContainer;
+    public GameObject OptionsContainer;
+    public GameObject MainContainer;
     private AsyncOperation sync;
     private bool startAnimation;
 
@@ -55,7 +57,8 @@ public class MainMenuManager : MonoBehaviour {
 
     public void OptionsButton()
     {
-
+        MainContainer.SetActive(false);
+        OptionsContainer.SetActive(true);
     }
 
     public void QuitButton()

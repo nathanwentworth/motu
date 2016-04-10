@@ -22,7 +22,7 @@ public class scavCheck : MonoBehaviour {
 	private bool fadePanel;
 
 	void Start () {
-
+        LockMouse.Unlock();
 		Time.timeScale = 0;
 		huntedCount = 0;
 
@@ -87,6 +87,7 @@ public class scavCheck : MonoBehaviour {
 		}
 
 		if (fadePanel) {
+            LockMouse.Lock();
 			Time.timeScale = 1;
 			menuAnimTimer += Time.unscaledDeltaTime;
 			instructionsPanel.GetComponent<CanvasGroup>().alpha = fade.Evaluate(menuAnimTimer);
