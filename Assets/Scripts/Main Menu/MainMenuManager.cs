@@ -6,18 +6,32 @@ using UnityEngine.SceneManagement;
 public class MainMenuManager : MonoBehaviour {
 
     public Text LoadingText;
+    public Slider ProgressBar;
     public GameObject LoadingContainer;
     private AsyncOperation sync;
+    private bool startAnimation;
 
     public float timeBetween;
     
 
 	void Start () {
+        ProgressBar.value = 0;
         Time.timeScale = 1;
         LoadingContainer.SetActive(false);
 	}
 
+    void Update()
+    {
+        if (startAnimation)
+        {
+            ProgressBar.value = Mathf.Lerp(ProgressBar.value, sync.progress + 0.1f, timeBetween);
+        }
 
+        if(ProgressBar.value >= 0.95f && sync.progress == 0.9f)
+        {
+            sync.allowSceneActivation = true;
+        }
+    }
 
     public void FreePlayButton()
     {
@@ -51,31 +65,15 @@ public class MainMenuManager : MonoBehaviour {
 
     IEnumerator LoadingScreen(string whatScene)
     {
-        StartCoroutine(LoadingTextAnimation());
         LoadingContainer.SetActive(true);
         sync =  SceneManager.LoadSceneAsync(whatScene, LoadSceneMode.Single);
         sync.allowSceneActivation = false;
-        while(sync.progress < 0.9f)
+        startAnimation = true;
+        while (sync.progress < 0.9f)
         {
             yield return new WaitForSeconds(0.1f);
         }
-        yield return new WaitForSeconds(3);
-        sync.allowSceneActivation = true;
         yield return null;
     }
 
-    IEnumerator LoadingTextAnimation()
-    {
-        while (true)
-        {
-            LoadingText.text = "Loading";
-            yield return new WaitForSeconds(timeBetween);
-            LoadingText.text = "Loading.";
-            yield return new WaitForSeconds(timeBetween);
-            LoadingText.text = "Loading..";
-            yield return new WaitForSeconds(timeBetween);
-            LoadingText.text = "Loading...";
-            yield return new WaitForSeconds(timeBetween);
-        }
-    }
 }
