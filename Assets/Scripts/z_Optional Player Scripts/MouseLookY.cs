@@ -40,7 +40,9 @@ public class MouseLookY : MonoBehaviour
 	Quaternion originalRotation;
 
 	void Start ()
-	{			
+	{
+        sensitivityY = PlayerPrefs.GetFloat("MOUSESENSITIVITY_KEY", 2.5f);
+        			
 		if (GetComponent<Rigidbody>())
 		{
 			GetComponent<Rigidbody>().freezeRotation = true;

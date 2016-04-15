@@ -2,8 +2,10 @@
 using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 
-public class MainMenuManager : MonoBehaviour {
+public class MainMenuManager : MonoBehaviour
+{
 
     public Text LoadingText;
     public Slider ProgressBar;
@@ -16,29 +18,42 @@ public class MainMenuManager : MonoBehaviour {
     public Slider options_VolumeSlider;
     public Dropdown options_ResolutionDrop;
     public Dropdown options_FullOrWindDrop;
-    public Dropdown options_ControlSchemeDrop;
+    public Slider options_MouseSensitivity;
+    public Text options_VolumeSliderValue;
+    public Text options_MouseSliderValue;
 
-    private string volumeKey = "VOLUME_VALUE";
-    private string resolutionKey = "RESOLUTION_VALUE";
-    private string fullscreenKey = "FULLSCREEN_VALUE";
-    private string controlSchemeKey = "CONTROLSCHEME_KEY";
+    private string VOLUMEKEY = "VOLUME_VALUE";
+    private string RESOLUTIONKEY = "RESOLUTION_VALUE";
+    private string FULLSCREENKEY = "FULLSCREEN_VALUE";
+    private string MOUSESENSITIVITYKEY = "MOUSESENSITIVITY_KEY";
 
     public float timeBetween;
-    
 
-	void Start () {
-        options_VolumeSlider.value = PlayerPrefs.GetFloat(volumeKey, 0.75f);
-        options_FullOrWindDrop.value = PlayerPrefs.GetInt(fullscreenKey, 0);
-        options_ResolutionDrop.value = PlayerPrefs.GetInt(resolutionKey, 0);
-        options_ControlSchemeDrop.value = PlayerPrefs.GetInt(controlSchemeKey, 0);
+    private bool wasResolutionChanged = false;
+    private bool wasFullscreenChanged = false;
 
+
+    void Start()
+    {
         ProgressBar.value = 0;
         Time.timeScale = 1;
         LoadingContainer.SetActive(false);
         OptionsContainer.SetActive(false);
         MainContainer.SetActive(true);
 
-        if(options_FullOrWindDrop.value == 0)
+        options_ResolutionDrop.options.Clear();
+        for (int i = 0; i < Screen.resolutions.Length; i++)
+        {
+            options_ResolutionDrop.options.Add(new Dropdown.OptionData(Screen.resolutions[i].ToString()));
+        }
+        options_VolumeSlider.value = PlayerPrefs.GetFloat(VOLUMEKEY, 0.75f);
+        options_FullOrWindDrop.value = PlayerPrefs.GetInt(FULLSCREENKEY, 0);
+        options_ResolutionDrop.value = PlayerPrefs.GetInt(RESOLUTIONKEY, 0);
+        options_MouseSensitivity.value = PlayerPrefs.GetFloat(MOUSESENSITIVITYKEY, 2.5f);
+
+        options_ResolutionDrop.RefreshShownValue();
+
+        if (options_FullOrWindDrop.value == 0)
         {
             Screen.fullScreen = true;
         }
@@ -46,8 +61,7 @@ public class MainMenuManager : MonoBehaviour {
         {
             Screen.fullScreen = false;
         }
-
-	}
+    }
 
     void Update()
     {
@@ -56,10 +70,14 @@ public class MainMenuManager : MonoBehaviour {
             ProgressBar.value = Mathf.Lerp(ProgressBar.value, sync.progress + 0.1f, timeBetween);
         }
 
-        if(ProgressBar.value >= 0.95f && sync.progress == 0.9f)
+        if (ProgressBar.value >= 0.95f && sync.progress == 0.9f)
         {
             sync.allowSceneActivation = true;
         }
+
+        options_MouseSliderValue.text = string.Format("{0:F1}", options_MouseSensitivity.value);
+
+        options_VolumeSliderValue.text = string.Format("{0:F0}%", options_VolumeSlider.value * 100);
     }
 
     public void FreePlayButton()
@@ -93,30 +111,59 @@ public class MainMenuManager : MonoBehaviour {
         Application.Quit();
     }
 
+    public void ResolutionChanged()
+    {
+        wasResolutionChanged = true;
+    }
+
+    public void FullscreenChanged()
+    {
+        wasFullscreenChanged = true;
+    }
+
     public void Options_Save()
     {
-        PlayerPrefs.SetInt(fullscreenKey, options_FullOrWindDrop.value);
-        PlayerPrefs.SetInt(controlSchemeKey, options_ControlSchemeDrop.value);
-        PlayerPrefs.SetInt(resolutionKey, options_ResolutionDrop.value);
-        PlayerPrefs.SetFloat(volumeKey, options_VolumeSlider.value);
+        PlayerPrefs.SetInt(FULLSCREENKEY, options_FullOrWindDrop.value);
+        PlayerPrefs.SetFloat(MOUSESENSITIVITYKEY, options_MouseSensitivity.value);
+        PlayerPrefs.SetInt(RESOLUTIONKEY, options_ResolutionDrop.value);
+        PlayerPrefs.SetFloat(VOLUMEKEY, options_VolumeSlider.value);
 
-        if (options_FullOrWindDrop.value == 0)
+        bool fullscreen = Screen.fullScreen;
+
+        if (wasFullscreenChanged)
         {
-            Screen.fullScreen = true;
+
+            if (options_FullOrWindDrop.value == 0)
+            {
+                Screen.fullScreen = true;
+                fullscreen = true;
+
+            }
+            else
+            {
+                Screen.fullScreen = false;
+                fullscreen = false;
+            }
         }
-        else
+
+        if (wasResolutionChanged)
         {
-            Screen.fullScreen = false;
+            Screen.SetResolution(Screen.resolutions[options_ResolutionDrop.value].width, Screen.resolutions[options_ResolutionDrop.value].height, fullscreen, Screen.resolutions[options_ResolutionDrop.value].refreshRate);
+            Debug.Log(Screen.resolutions[options_ResolutionDrop.value]);
         }
+
+        Debug.Log(Screen.fullScreen);
 
         MainContainer.SetActive(true);
         OptionsContainer.SetActive(false);
+        wasFullscreenChanged = false;
+        wasResolutionChanged = false;
     }
 
     IEnumerator LoadingScreen(string whatScene)
     {
         LoadingContainer.SetActive(true);
-        sync =  SceneManager.LoadSceneAsync(whatScene, LoadSceneMode.Single);
+        sync = SceneManager.LoadSceneAsync(whatScene, LoadSceneMode.Single);
         sync.allowSceneActivation = false;
         startAnimation = true;
         while (sync.progress < 0.9f)
