@@ -4,6 +4,7 @@
 
 using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 [RequireComponent (typeof (CharacterController))]
 public class FirstPersonDrifter: MonoBehaviour
@@ -55,10 +56,22 @@ public class FirstPersonDrifter: MonoBehaviour
 	private float jumpSpeedOrigin;
 	private float inputX;
 	private float inputY;
-	public Manager gameManager;
+	private Manager gameManager;
+    private ScavHuntManager scavManager;
  
     void Start()
     {
+        if(SceneManager.GetActiveScene().name == "scav")
+        {
+            scavManager = GameObject.Find("GameManager").GetComponent<ScavHuntManager>();
+            gameManager = null;
+        }
+        else
+        {
+            gameManager = GameObject.Find("GameManager").GetComponent<Manager>();
+            scavManager = null;
+        }
+
         controller = GetComponent<CharacterController>();
         myTransform = transform;
         speed = runSpeed;
@@ -69,24 +82,54 @@ public class FirstPersonDrifter: MonoBehaviour
     }
  
     void FixedUpdate() {
-		if (gameManager.enableMovement) {
-			inputX = Input.GetAxis ("Horizontal");
-			inputY = Input.GetAxis ("Vertical");
-			gameObject.GetComponent<MouseLook> ().enabled = true;
-			gameObject.GetComponentInChildren<HeadBob> ().enabled = true;
-			gameObject.GetComponentInChildren<MouseLookY> ().enabled = true;
-			gameObject.GetComponentInChildren<crouchCam> ().enabled = true;
-			jumpSpeed = jumpSpeedOrigin;
-		} else {
-            inputX = 0;
-            inputY = 0;
-			gameObject.GetComponentInChildren<CameraZoom> ().enabled = false;
-			gameObject.GetComponent<MouseLook> ().enabled = false;
-			gameObject.GetComponentInChildren<HeadBob> ().enabled = false;
-			gameObject.GetComponentInChildren<MouseLookY> ().enabled = false;
-			gameObject.GetComponentInChildren<crouchCam> ().enabled = false;
-			jumpSpeed = 0;
-		}
+        if (SceneManager.GetActiveScene().name == "scav")
+        {
+            if (scavManager.enableMovement)
+            {
+                inputX = Input.GetAxis("Horizontal");
+                inputY = Input.GetAxis("Vertical");
+                gameObject.GetComponent<MouseLook>().enabled = true;
+                gameObject.GetComponentInChildren<HeadBob>().enabled = true;
+                gameObject.GetComponentInChildren<MouseLookY>().enabled = true;
+                gameObject.GetComponentInChildren<crouchCam>().enabled = true;
+                jumpSpeed = jumpSpeedOrigin;
+            }
+            else
+            {
+                inputX = 0;
+                inputY = 0;
+                gameObject.GetComponent<MouseLook>().enabled = false;
+                gameObject.GetComponentInChildren<HeadBob>().enabled = false;
+                gameObject.GetComponentInChildren<MouseLookY>().enabled = false;
+                gameObject.GetComponentInChildren<crouchCam>().enabled = false;
+                jumpSpeed = 0;
+            }
+        }
+        else
+        {
+            if (gameManager.enableMovement)
+            {
+                inputX = Input.GetAxis("Horizontal");
+                inputY = Input.GetAxis("Vertical");
+                gameObject.GetComponent<MouseLook>().enabled = true;
+                gameObject.GetComponentInChildren<HeadBob>().enabled = true;
+                gameObject.GetComponentInChildren<MouseLookY>().enabled = true;
+                gameObject.GetComponentInChildren<crouchCam>().enabled = true;
+                jumpSpeed = jumpSpeedOrigin;
+            }
+            else
+            {
+                inputX = 0;
+                inputY = 0;
+                gameObject.GetComponentInChildren<CameraZoom>().enabled = false;
+                gameObject.GetComponent<MouseLook>().enabled = false;
+                gameObject.GetComponentInChildren<HeadBob>().enabled = false;
+                gameObject.GetComponentInChildren<MouseLookY>().enabled = false;
+                gameObject.GetComponentInChildren<crouchCam>().enabled = false;
+                jumpSpeed = 0;
+            }
+        }
+
         // If both horizontal and vertical are used simultaneously, limit speed (if allowed), so the total doesn't exceed normal move speed
         float inputModifyFactor = (inputX != 0.0f && inputY != 0.0f && limitDiagonalSpeed)? .7071f : 1.0f;
  		

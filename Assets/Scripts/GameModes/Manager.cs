@@ -49,9 +49,12 @@ public class Manager : MonoBehaviour
 
     void FixedUpdate()
     {
-        float zoomValue = Input.GetAxis("Mouse ScrollWheel");
-        viewCamera.fieldOfView = Mathf.Clamp(viewCamera.fieldOfView + (-zoomValue * zoomSensitivity), zoomMin, zoomMax);
-        photoCamera.fieldOfView = viewCamera.fieldOfView;
+        if (enableMovement)
+        {
+            float zoomValue = Input.GetAxis("Mouse ScrollWheel");
+            viewCamera.fieldOfView = Mathf.Clamp(viewCamera.fieldOfView + (-zoomValue * zoomSensitivity), zoomMin, zoomMax);
+            photoCamera.fieldOfView = viewCamera.fieldOfView;
+        }
        
         //Look for changes in screen resolution
         resWidth = Screen.currentResolution.width;

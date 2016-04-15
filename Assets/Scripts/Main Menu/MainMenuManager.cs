@@ -35,6 +35,12 @@ public class MainMenuManager : MonoBehaviour
 
     void Start()
     {
+        if (System.IO.Directory.Exists(Application.persistentDataPath + "/Photos/") != true)
+        {
+            Debug.Log("Creating Photos Directory");
+            System.IO.Directory.CreateDirectory(Application.persistentDataPath + "/Photos/");
+        }
+
         ProgressBar.value = 0;
         Time.timeScale = 1;
         LoadingContainer.SetActive(false);
