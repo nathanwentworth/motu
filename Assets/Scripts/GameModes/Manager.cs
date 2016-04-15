@@ -31,20 +31,54 @@ public class Manager : MonoBehaviour
     private bool isAnotherUIActive = false;
     private bool isPaused = false;
 
+    public Slider options_VolumeSlider;
+    public Dropdown options_ResolutionDrop;
+    public Dropdown options_FullOrWindDrop;
+    public Slider options_MouseSensitivity;
+    public Text options_VolumeSliderValue;
+    public Text options_MouseSliderValue;
+    public GameObject OptionsContainer;
+    public GameObject MainContainer;
+    private string VOLUMEKEY = "VOLUME_VALUE";
+    private string RESOLUTIONKEY = "RESOLUTION_VALUE";
+    private string FULLSCREENKEY = "FULLSCREEN_VALUE";
+    private string MOUSESENSITIVITYKEY = "MOUSESENSITIVITY_KEY";
+    private bool wasResolutionChanged = false;
+    private bool wasFullscreenChanged = false;
+
     void Start()
     {
+        unPause();
 		if (System.IO.Directory.Exists (Application.persistentDataPath + "/Photos/") != true) {
 			Debug.Log ("Creating Photos Directory");
 			System.IO.Directory.CreateDirectory (Application.persistentDataPath + "/Photos/");
 		}
         viewCamera = mainCam.GetComponent<Camera>();
         photoCamera = secondaryCam.GetComponent<Camera>();
-        LockMouse.Lock();
-        Time.timeScale = 1;
-        AudioListener.pause = false;
         //ui_CameraUI.SetActive(false);
         resWidth = Screen.currentResolution.width;
         resHeight = Screen.currentResolution.height;
+
+        options_ResolutionDrop.options.Clear();
+        for (int i = 0; i < Screen.resolutions.Length; i++)
+        {
+            options_ResolutionDrop.options.Add(new Dropdown.OptionData(Screen.resolutions[i].ToString()));
+        }
+        options_VolumeSlider.value = PlayerPrefs.GetFloat(VOLUMEKEY, 0.75f);
+        options_FullOrWindDrop.value = PlayerPrefs.GetInt(FULLSCREENKEY, 0);
+        options_ResolutionDrop.value = PlayerPrefs.GetInt(RESOLUTIONKEY, 0);
+        options_MouseSensitivity.value = PlayerPrefs.GetFloat(MOUSESENSITIVITYKEY, 2.5f);
+
+        options_ResolutionDrop.RefreshShownValue();
+
+        if (options_FullOrWindDrop.value == 0)
+        {
+            Screen.fullScreen = true;
+        }
+        else
+        {
+            Screen.fullScreen = false;
+        }
     }
 
     void FixedUpdate()
@@ -63,6 +97,9 @@ public class Manager : MonoBehaviour
 
     void Update()
     {
+        options_MouseSliderValue.text = string.Format("{0:F1}", options_MouseSensitivity.value);
+
+        options_VolumeSliderValue.text = string.Format("{0:F0}%", options_VolumeSlider.value * 100);
         //INPUTS
         //AimDown Camera
         //if (Input.GetButton("Fire2") && !isAnotherUIActive)
@@ -132,9 +169,64 @@ public class Manager : MonoBehaviour
         AudioListener.pause = false;
     }
 
+    public void OptionsButton()
+    {
+        MainContainer.SetActive(false);
+        OptionsContainer.SetActive(true);
+    }
+
     public void ExitToMainMenu()
     {
         SceneManager.LoadScene("MainMenuTest");
+    }
+
+    public void ResolutionChanged()
+    {
+        wasResolutionChanged = true;
+    }
+
+    public void FullscreenChanged()
+    {
+        wasFullscreenChanged = true;
+    }
+
+    public void Options_Save()
+    {
+        PlayerPrefs.SetInt(FULLSCREENKEY, options_FullOrWindDrop.value);
+        PlayerPrefs.SetFloat(MOUSESENSITIVITYKEY, options_MouseSensitivity.value);
+        PlayerPrefs.SetInt(RESOLUTIONKEY, options_ResolutionDrop.value);
+        PlayerPrefs.SetFloat(VOLUMEKEY, options_VolumeSlider.value);
+
+        bool fullscreen = Screen.fullScreen;
+
+        if (wasFullscreenChanged)
+        {
+
+            if (options_FullOrWindDrop.value == 0)
+            {
+                Screen.fullScreen = true;
+                fullscreen = true;
+
+            }
+            else
+            {
+                Screen.fullScreen = false;
+                fullscreen = false;
+            }
+        }
+
+        if (wasResolutionChanged)
+        {
+            Screen.SetResolution(Screen.resolutions[options_ResolutionDrop.value].width, Screen.resolutions[options_ResolutionDrop.value].height, fullscreen, Screen.resolutions[options_ResolutionDrop.value].refreshRate);
+            Debug.Log(Screen.resolutions[options_ResolutionDrop.value]);
+        }
+
+        Debug.Log(Screen.fullScreen);
+
+        MainContainer.SetActive(true);
+        OptionsContainer.SetActive(false);
+        wasFullscreenChanged = false;
+        wasResolutionChanged = false;
     }
 }
 

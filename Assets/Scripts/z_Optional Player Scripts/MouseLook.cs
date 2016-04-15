@@ -41,7 +41,6 @@ public class MouseLook : MonoBehaviour
 	
 	void Start ()
 	{
-        sensitivityX = PlayerPrefs.GetFloat("MOUSESENSITIVITY_KEY", 2.5f);
 
         if (GetComponent<Rigidbody>())
 		{
@@ -53,7 +52,9 @@ public class MouseLook : MonoBehaviour
  
 	void Update ()
 	{
-		if (axes == RotationAxes.MouseX)
+        sensitivityX = PlayerPrefs.GetFloat("MOUSESENSITIVITY_KEY", 2.5f);
+
+        if (axes == RotationAxes.MouseX)
 		{			
 			rotAverageX = 0f;
  
