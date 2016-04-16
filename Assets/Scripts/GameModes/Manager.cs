@@ -70,15 +70,6 @@ public class Manager : MonoBehaviour
         options_MouseSensitivity.value = PlayerPrefs.GetFloat(MOUSESENSITIVITYKEY, 2.5f);
 
         options_ResolutionDrop.RefreshShownValue();
-
-        if (options_FullOrWindDrop.value == 0)
-        {
-            Screen.fullScreen = true;
-        }
-        else
-        {
-            Screen.fullScreen = false;
-        }
     }
 
     void FixedUpdate()
