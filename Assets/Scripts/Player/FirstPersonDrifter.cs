@@ -41,7 +41,7 @@ public class FirstPersonDrifter: MonoBehaviour
     public int antiBunnyHopFactor = 1;
  
     private Vector3 moveDirection = Vector3.zero;
-	public bool grounded = false;
+	 public bool grounded = false;
     private CharacterController controller;
     private Transform myTransform;
     private float speed;
@@ -53,10 +53,10 @@ public class FirstPersonDrifter: MonoBehaviour
     private Vector3 contactPoint;
     private bool playerControl = false;
     private int jumpTimer;
-	private float jumpSpeedOrigin;
-	private float inputX;
-	private float inputY;
-	private Manager gameManager;
+    private float jumpSpeedOrigin;
+    private float inputX;
+    private float inputY;
+    private Manager gameManager;
     private ScavHuntManager scavManager;
  
     void Start()
@@ -154,6 +154,15 @@ public class FirstPersonDrifter: MonoBehaviour
             }
  
             // If we were falling, and we fell a vertical distance greater than the threshold, run a falling damage routine
+
+            Vector3 horizontalVelocity = controller.velocity;
+            horizontalVelocity = new Vector3(controller.velocity.x, 0, controller.velocity.z);
+            float horizontalSpeed = horizontalVelocity.magnitude;
+
+            // if (Mathf.Abs(overallSpeed) > 0) {
+              // play sounds!!!!!!
+            // }
+
             if (falling) {
                 falling = false;
                 if (myTransform.position.y < fallStartLevel - fallingDamageThreshold)

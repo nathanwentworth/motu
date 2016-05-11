@@ -81,9 +81,9 @@ public class MainMenuManager : MonoBehaviour
             sync.allowSceneActivation = true;
         }
 
-        options_MouseSliderValue.text = string.Format("{0:F1}", options_MouseSensitivity.value);
+        // options_MouseSliderValue.text = string.Format("{0:F1}", options_MouseSensitivity.value);
 
-        options_VolumeSliderValue.text = string.Format("{0:F0}%", options_VolumeSlider.value * 100);
+        // options_VolumeSliderValue.text = string.Format("{0:F0}%", options_VolumeSlider.value * 100);
     }
 
     public void FreePlayButton()
