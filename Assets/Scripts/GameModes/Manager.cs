@@ -82,15 +82,15 @@ public class Manager : MonoBehaviour
         }
        
         //Look for changes in screen resolution
-        resWidth = Screen.currentResolution.width;
-        resHeight = Screen.currentResolution.height;
+        // resWidth = Screen.currentResolution.width;
+        // resHeight = Screen.currentResolution.height;
     }
 
     void Update()
     {
-        options_MouseSliderValue.text = string.Format("{0:F1}", options_MouseSensitivity.value);
+        // options_MouseSliderValue.text = string.Format("{0:F1}", options_MouseSensitivity.value);
 
-        options_VolumeSliderValue.text = string.Format("{0:F0}%", options_VolumeSlider.value * 100);
+        // options_VolumeSliderValue.text = string.Format("{0:F0}%", options_VolumeSlider.value * 100);
         //INPUTS
         //AimDown Camera
         //if (Input.GetButton("Fire2") && !isAnotherUIActive)
@@ -169,6 +169,11 @@ public class Manager : MonoBehaviour
     public void ExitToMainMenu()
     {
         SceneManager.LoadScene("MainMenuTest");
+    }
+
+    public void Quit()
+    {
+        Application.Quit();
     }
 
     public void ResolutionChanged()

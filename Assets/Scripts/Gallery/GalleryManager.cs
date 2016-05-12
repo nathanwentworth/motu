@@ -109,7 +109,7 @@ public class GalleryManager : MonoBehaviour
     public void PhotosArray()
     {
         DirectoryInfo di = new DirectoryInfo(UnityEngine.Application.persistentDataPath + "/Photos/");
-        allFiles = di.GetFiles();
+        allFiles = di.GetFiles("TitleHere*.png");
     }
 
     public void SavePhoto()

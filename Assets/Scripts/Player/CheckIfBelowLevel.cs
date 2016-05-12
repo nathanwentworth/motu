@@ -8,7 +8,7 @@ using System.Collections;
 
 public class CheckIfBelowLevel : MonoBehaviour
 {
-	public float resetBelowThisY = -100f;
+	public float resetBelowThisY = 832f;
 	public bool fadeInOnReset = true;
 	
 	private Vector3 startingPosition;
