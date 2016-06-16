@@ -12,7 +12,8 @@ public class GalleryManager : MonoBehaviour
     [Header("GameObject References")]
     public GameObject PhotoPrefab;
     public GameObject LoadingPanel;
-    public GameObject PagePrefab;
+    public GameObject PhotoContainer;
+    public GameObject panel_Main;
     public GameObject panel_ZoomScreen;
     public GameObject img_LargeFormat;
     public GameObject img_NextImage;
@@ -72,6 +73,7 @@ public class GalleryManager : MonoBehaviour
 
     public void CloseZoom() {
       panel_ZoomScreen.SetActive(false);
+        panel_Main.SetActive(true);
     }
 
     public void DeletePhoto()
@@ -164,6 +166,7 @@ public class GalleryManager : MonoBehaviour
         img_PrevImage.GetComponent<RawImage>().texture = null;
       }
       panel_ZoomScreen.SetActive(true);
+        panel_Main.SetActive(false);
     }
 
     IEnumerator CreateImages()
@@ -182,7 +185,7 @@ public class GalleryManager : MonoBehaviour
             GameObject photo = Instantiate(PhotoPrefab);
             Debug.Log(string.Format("Creating photo {0}.", photoNumber + 1));
             //Set the texture to the photo
-            photo.transform.SetParent(PagePrefab.transform);
+            photo.transform.SetParent(PhotoContainer.transform);
             photo.GetComponent<RawImage>().texture = image;
             photo.transform.localPosition = Vector3.zero;
             photo.GetComponent<PictureSelect>().photoNumber = photoNumber + 1;
