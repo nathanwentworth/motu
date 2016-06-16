@@ -20,6 +20,13 @@ public class GalleryManager : MonoBehaviour
     public GameObject DeleteButton;
     public GameObject SaveButton;
     public GameObject ViewButton;
+
+    public GameObject panel_ZoomScreen;
+    public GameObject img_LargeFormat;
+    public GameObject img_NextImage;
+    public GameObject img_PrevImage;
+    public Text txt_PhotoDate;
+
     public Text PhotosTaken;
     public Text TripsCompleted;
     public Text LoadingText;
@@ -33,6 +40,11 @@ public class GalleryManager : MonoBehaviour
     private int numberOfPages = 0;
     private int activePage = 1;
     private bool startProgressBar;
+    private string dateTime;
+    private string[] dateTimeArr;
+    private char[] dateTimeSplit = {'_', '-'};
+    private int currentlyViewedPhoto;
+    private string photoMode;
 
 
     void Start()
@@ -70,6 +82,10 @@ public class GalleryManager : MonoBehaviour
     public void CloseLightbox()
     {
         LightBox.SetActive(false);
+    }
+
+    public void CloseZoom() {
+      panel_ZoomScreen.SetActive(false);
     }
 
     public void DeletePhoto()
@@ -130,9 +146,38 @@ public class GalleryManager : MonoBehaviour
         }
     }
 
+    public void NextPrev(int indexChange) {
+      if (currentlyViewedPhoto > 0 || currentlyViewedPhoto < allFiles.Length) {
+        currentlyViewedPhoto = currentlyViewedPhoto + indexChange;
+      }
+      if (currentlyViewedPhoto <= 1) currentlyViewedPhoto = 1;
+      if (currentlyViewedPhoto > allFiles.Length) currentlyViewedPhoto = allFiles.Length;
+      ViewPhoto(currentlyViewedPhoto);
+    }
+
     public void ViewPhoto(int photoNumber)
     {
-        print("bloop " + photoNumber);
+      currentlyViewedPhoto = photoNumber;
+      dateTime = allFiles[photoNumber-1].ToString();
+      dateTime = dateTime.Replace(UnityEngine.Application.persistentDataPath.ToString() + "/Photos/TitleHere_", "");
+      dateTime = dateTime.Replace(".png", "");
+      dateTimeArr = dateTime.Split(dateTimeSplit);
+      txt_PhotoDate.text = "PHOTO TAKEN ON:\n" + dateTimeArr[1] + " / " + dateTimeArr[2] + " / " + dateTimeArr[3] + " at " + dateTimeArr[4] + ":" + dateTimeArr[5] + ":" + dateTimeArr[6];
+      if (dateTimeArr[0] == "0") photoMode = "TAKEN IN:\nFREE MODE";
+      else photoMode = "TAKEN IN:\nSCAVENGER HUNT";
+      img_LargeFormat.GetComponent<RawImage>().texture = GameObject.Find("Photo " + photoNumber).GetComponent<RawImage>().texture;
+      if ((photoNumber + 1) <= allFiles.Length) {
+        img_NextImage.GetComponent<RawImage>().texture = GameObject.Find("Photo " + (photoNumber + 1)).GetComponent<RawImage>().texture;      
+      } else {
+        img_NextImage.GetComponent<RawImage>().texture = null;
+      }
+      if ((photoNumber - 1) > 0) {
+        img_PrevImage.GetComponent<RawImage>().texture = GameObject.Find("Photo " + (photoNumber - 1)).GetComponent<RawImage>().texture;        
+      } else {
+        img_PrevImage.GetComponent<RawImage>().texture = null;
+      }
+      print("bloop " + photoNumber);
+      panel_ZoomScreen.SetActive(true);
     }
 
     IEnumerator CreateImages()
