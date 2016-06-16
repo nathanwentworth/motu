@@ -13,14 +13,6 @@ public class GalleryManager : MonoBehaviour
     public GameObject PhotoPrefab;
     public GameObject LoadingPanel;
     public GameObject PagePrefab;
-    public GameObject LightBox;
-    public GameObject LightBoxPhoto;
-    public GameObject BackButton;
-    public GameObject NextButton;
-    public GameObject DeleteButton;
-    public GameObject SaveButton;
-    public GameObject ViewButton;
-
     public GameObject panel_ZoomScreen;
     public GameObject img_LargeFormat;
     public GameObject img_NextImage;
@@ -32,7 +24,6 @@ public class GalleryManager : MonoBehaviour
     public Text LoadingText;
     public Slider ProgressBar;
     [Header("Currently Selected Photo")]
-    public int currentlySelectedPhoto = 0;
     //Private fields
     private List<GameObject> PagesList = new List<GameObject>();
     private List<GameObject> PhotosList = new List<GameObject>();
@@ -75,13 +66,8 @@ public class GalleryManager : MonoBehaviour
 
     public void ClickedNothing()
     {
-        currentlySelectedPhoto = 0;
+        currentlyViewedPhoto = 0;
         Debug.Log("Clicked on nothing.");
-    }
-
-    public void CloseLightbox()
-    {
-        LightBox.SetActive(false);
     }
 
     public void CloseZoom() {
@@ -90,9 +76,9 @@ public class GalleryManager : MonoBehaviour
 
     public void DeletePhoto()
     {
-        File.Delete(allFiles[currentlySelectedPhoto - 1].ToString());
-        Destroy(PhotosList[currentlySelectedPhoto - 1]);
-        PhotosList.RemoveAt(currentlySelectedPhoto - 1);
+        File.Delete(allFiles[currentlyViewedPhoto - 1].ToString());
+        Destroy(PhotosList[currentlyViewedPhoto - 1]);
+        PhotosList.RemoveAt(currentlyViewedPhoto - 1);
         for (int i = 0; i < PhotosList.Count; i++)
         {
             PhotosList[i].GetComponent<PictureSelect>().photoNumber = i + 1;
@@ -111,8 +97,9 @@ public class GalleryManager : MonoBehaviour
             numberOfPages--;
         }
         PhotosArray();
-        Debug.Log("Deleted photo " + currentlySelectedPhoto.ToString() + ".");
-        currentlySelectedPhoto = 0;
+        Debug.Log("Deleted photo " + currentlyViewedPhoto.ToString() + ".");
+        currentlyViewedPhoto = 0;
+        CloseZoom();
     }
 
     public static float NumberOfPhotos()
@@ -130,19 +117,19 @@ public class GalleryManager : MonoBehaviour
 
     public void SavePhoto()
     {
-        Debug.Log("Saving photo....");
+        Debug.Log("Saving photo...." + currentlyViewedPhoto);
         if (UnityEngine.Application.platform == RuntimePlatform.WindowsPlayer || UnityEngine.Application.platform == RuntimePlatform.WindowsEditor)
         {
             SaveFileDialog save = new SaveFileDialog();
             save.Filter = "PNG Image|*.png";
             save.Title = "Select where to save your photo!";
             save.ShowDialog();
-            StartCoroutine(Save(currentlySelectedPhoto, save.FileName));
+            StartCoroutine(Save(currentlyViewedPhoto, save.FileName));
         }
         else
         {
-            string filename = Path.GetFileName(allFiles[currentlySelectedPhoto].ToString());
-            StartCoroutine(Save(currentlySelectedPhoto, UnityEngine.Application.dataPath + "/" + filename));
+            string filename = Path.GetFileName(allFiles[currentlyViewedPhoto].ToString());
+            StartCoroutine(Save(currentlyViewedPhoto, UnityEngine.Application.dataPath + "/" + filename));
         }
     }
 
@@ -176,7 +163,6 @@ public class GalleryManager : MonoBehaviour
       } else {
         img_PrevImage.GetComponent<RawImage>().texture = null;
       }
-      print("bloop " + photoNumber);
       panel_ZoomScreen.SetActive(true);
     }
 
@@ -207,25 +193,10 @@ public class GalleryManager : MonoBehaviour
         yield return null;
     }
 
-
-    IEnumerator CreateLightBoxImage(int photoNumber)
-    {
-        //Upload the file into the game
-        Texture2D image = new Texture2D(2, 2);
-        WWW www = new WWW("file://" + allFiles[photoNumber - 1].ToString());
-        yield return www;
-        //Load it as a texture
-        www.LoadImageIntoTexture(image);
-        //Set the texture to the photo
-        LightBoxPhoto.GetComponent<RawImage>().texture = image;
-        yield return LightBoxPhoto;
-        LightBox.SetActive(true);
-        yield return null;
-    }
-
     IEnumerator Save(int photoNumber, string path)
     {
         Texture2D image = new Texture2D(2, 2);
+        Debug.Log(allFiles[photoNumber - 1]);
         WWW www = new WWW("file://" + allFiles[photoNumber - 1].ToString());
         yield return www;
         //Load it as a texture
