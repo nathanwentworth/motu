@@ -18,6 +18,8 @@ public class GalleryManager : MonoBehaviour
     public GameObject img_LargeFormat;
     public GameObject img_NextImage;
     public GameObject img_PrevImage;
+    public Text PhotoCounter;
+    public Text txt_PhotoMode;
     public Text txt_PhotoDate;
 
     public Text PhotosTaken;
@@ -37,6 +39,7 @@ public class GalleryManager : MonoBehaviour
     private char[] dateTimeSplit = { '_', '-' };
     private int currentlyViewedPhoto;
     private string photoMode;
+    private string zoomPhotoCounter;
 
 
     void Start()
@@ -158,6 +161,9 @@ public class GalleryManager : MonoBehaviour
         txt_PhotoDate.text = "PHOTO TAKEN ON:\n" + dateTimeArr[1] + " / " + dateTimeArr[2] + " / " + dateTimeArr[3] + " at " + dateTimeArr[4] + ":" + dateTimeArr[5] + ":" + dateTimeArr[6];
         if (dateTimeArr[0] == "0") photoMode = "TAKEN IN:\nFREE MODE";
         else photoMode = "TAKEN IN:\nSCAVENGER HUNT";
+        txt_PhotoMode.text = photoMode;
+        zoomPhotoCounter = currentlyViewedPhoto + "/" + allFiles.Length;
+        PhotoCounter.text = zoomPhotoCounter;
         img_LargeFormat.GetComponent<RawImage>().texture = GameObject.Find("Photo " + photoNumber).GetComponent<RawImage>().texture;
         if ((photoNumber + 1) <= allFiles.Length)
         {
