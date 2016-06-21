@@ -57,19 +57,12 @@ public class FirstPersonDrifter: MonoBehaviour
     private float inputX;
     private float inputY;
     private Manager gameManager;
-    private ScavHuntManager scavManager;
  
     void Start()
     {
-        if(SceneManager.GetActiveScene().name == "scav")
-        {
-            scavManager = GameObject.Find("ScavGameManager").GetComponent<ScavHuntManager>();
-            gameManager = null;
-        }
-        else
+        if (SceneManager.GetActiveScene().name == "Test")
         {
             gameManager = GameObject.Find("GameManager").GetComponent<Manager>();
-            scavManager = null;
         }
 
         controller = GetComponent<CharacterController>();
@@ -82,30 +75,7 @@ public class FirstPersonDrifter: MonoBehaviour
     }
  
     void FixedUpdate() {
-        if (SceneManager.GetActiveScene().name == "scav")
-        {
-            if (scavManager.enableMovement)
-            {
-                inputX = Input.GetAxis("Horizontal");
-                inputY = Input.GetAxis("Vertical");
-                gameObject.GetComponent<MouseLook>().enabled = true;
-                gameObject.GetComponentInChildren<HeadBob>().enabled = true;
-                gameObject.GetComponentInChildren<MouseLookY>().enabled = true;
-                gameObject.GetComponentInChildren<crouchCam>().enabled = true;
-                jumpSpeed = jumpSpeedOrigin;
-            }
-            else
-            {
-                inputX = 0;
-                inputY = 0;
-                gameObject.GetComponent<MouseLook>().enabled = false;
-                gameObject.GetComponentInChildren<HeadBob>().enabled = false;
-                gameObject.GetComponentInChildren<MouseLookY>().enabled = false;
-                gameObject.GetComponentInChildren<crouchCam>().enabled = false;
-                jumpSpeed = 0;
-            }
-        }
-        else
+        if (SceneManager.GetActiveScene().name == "Test")
         {
             if (gameManager.enableMovement)
             {
@@ -128,6 +98,17 @@ public class FirstPersonDrifter: MonoBehaviour
                 gameObject.GetComponentInChildren<crouchCam>().enabled = false;
                 jumpSpeed = 0;
             }
+        }
+
+        else
+        {
+            inputX = Input.GetAxis("Horizontal");
+            inputY = Input.GetAxis("Vertical");
+            gameObject.GetComponent<MouseLook>().enabled = true;
+            gameObject.GetComponentInChildren<HeadBob>().enabled = true;
+            gameObject.GetComponentInChildren<MouseLookY>().enabled = true;
+            gameObject.GetComponentInChildren<crouchCam>().enabled = true;
+            jumpSpeed = jumpSpeedOrigin;
         }
 
         // If both horizontal and vertical are used simultaneously, limit speed (if allowed), so the total doesn't exceed normal move speed
