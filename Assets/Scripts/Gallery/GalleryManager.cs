@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
-
+using UnityEngine.SceneManagement;
 
 public class GalleryManager : MonoBehaviour
 {
@@ -24,8 +24,6 @@ public class GalleryManager : MonoBehaviour
 
     public Text PhotosTaken;
     public Text TripsCompleted;
-    public Text LoadingText;
-    public Slider ProgressBar;
     [Header("Currently Selected Photo")]
     //Private fields
     private List<GameObject> PagesList = new List<GameObject>();
@@ -56,14 +54,8 @@ public class GalleryManager : MonoBehaviour
     {
         PhotosTaken.text = string.Format("{0} PHOTOS TAKEN", NumberOfPhotos());
 
-        if (startProgressBar)
+        if (PhotosList.Count / NumberOfPhotos() == 1)
         {
-            ProgressBar.value = Mathf.Lerp(ProgressBar.value, 1, 0.02f);
-        }
-
-        if (ProgressBar.value >= 0.95f && PhotosList.Count / NumberOfPhotos() == 1)
-        {
-            startProgressBar = false;
             LoadingPanel.SetActive(false);
         }
     }
@@ -138,6 +130,11 @@ public class GalleryManager : MonoBehaviour
             string filename = Path.GetFileName(allFiles[currentlyViewedPhoto].ToString());
             StartCoroutine(Save(currentlyViewedPhoto, UnityEngine.Application.dataPath + "/" + filename));
         }
+    }
+
+    public void MainMenu()
+    {
+        SceneManager.LoadScene("MainMenuTest");
     }
 
     public void NextPrev(int indexChange)
