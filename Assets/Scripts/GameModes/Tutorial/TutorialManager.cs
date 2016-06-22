@@ -26,7 +26,7 @@ public class TutorialManager : MonoBehaviour
     private string TUTORIALCOMPLETE = "TUTORIAL_COMPLETE";
 
     private string[] tutArr1 = { "Welcome to OuterWorld Image!", "In this game, you will be taking pictures on an alien planet!", "Use the mouse or right analog stick to look around.",
-        "Use WASD or the left analog stick to move around.", "Press Spacebar or the A button to jump.", "Press Left Shift or the Y button to crouch.", "When your ready, go to the objective point on the next island!" };
+        "Use WASD or the left analog stick to move around.", "Press Spacebar or the A button to jump.", "Press Left Shift or the Y button to crouch.", "When you're ready, go to the objective point on the next island!" };
     private string[] tutArr2 = { "Great job! To use your camera, use the left mouse button or the right trigger.", "To zoom in, use the mouse wheel or the right analog stick.", "Why don't you practice by taking a picture of that strange looking dog over there!" };
     private string[] tutArr3 = { "Nice Shot! Now that you know the basics, you can play the full game by going to Free Play in the Main Menu.", "To view the photos you have taken, you can go to the Gallery in the Main Menu as well.", "Now Loading the Main Menu. Have fun and enjoy!" };
 
