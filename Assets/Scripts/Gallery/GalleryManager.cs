@@ -31,7 +31,6 @@ public class GalleryManager : MonoBehaviour
     private FileInfo[] allFiles;
     private int numberOfPages = 0;
     private int activePage = 1;
-    private bool startProgressBar;
     private string dateTime;
     private string[] dateTimeArr;
     private char[] dateTimeSplit = { '_', '-' };
@@ -52,6 +51,7 @@ public class GalleryManager : MonoBehaviour
 
     void Update()
     {
+        //
         PhotosTaken.text = string.Format("{0} PHOTOS TAKEN", NumberOfPhotos());
 
         if (PhotosList.Count / NumberOfPhotos() == 1)
@@ -184,7 +184,6 @@ public class GalleryManager : MonoBehaviour
     IEnumerator CreateImages()
     {
         LoadingPanel.SetActive(true);
-        startProgressBar = true;
         for (int photoNumber = 0; photoNumber < NumberOfPhotos(); photoNumber++)
         {
             //Upload the file into the game

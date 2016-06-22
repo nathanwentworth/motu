@@ -12,6 +12,10 @@ public class MainMenuManager : MonoBehaviour
     public GameObject LoadingContainer;
     public GameObject OptionsContainer;
     public GameObject MainContainer;
+    public GameObject FreePlayButtonGO;
+    public GameObject FreePlayButtonText;
+    public GameObject GalleryButtonGO;
+    public GameObject GalleryButtonText;
     private AsyncOperation sync;
     private bool startAnimation;
 
@@ -26,11 +30,13 @@ public class MainMenuManager : MonoBehaviour
     private string RESOLUTIONKEY = "RESOLUTION_VALUE";
     private string FULLSCREENKEY = "FULLSCREEN_VALUE";
     private string MOUSESENSITIVITYKEY = "MOUSESENSITIVITY_KEY";
+    private string TUTORIALCOMPLETE = "TUTORIAL_COMPLETE";
 
     public float timeBetween;
 
     private bool wasResolutionChanged = false;
     private bool wasFullscreenChanged = false;
+    private int tutorialComplete = 0;
 
 
     void Start()
@@ -46,6 +52,7 @@ public class MainMenuManager : MonoBehaviour
         LoadingContainer.SetActive(false);
         OptionsContainer.SetActive(false);
         MainContainer.SetActive(true);
+        LockMouse.Unlock();
 
         options_ResolutionDrop.options.Clear();
         for (int i = 0; i < Screen.resolutions.Length; i++)
@@ -56,6 +63,7 @@ public class MainMenuManager : MonoBehaviour
         options_FullOrWindDrop.value = PlayerPrefs.GetInt(FULLSCREENKEY, 0);
         options_ResolutionDrop.value = PlayerPrefs.GetInt(RESOLUTIONKEY, 0);
         options_MouseSensitivity.value = PlayerPrefs.GetFloat(MOUSESENSITIVITYKEY, 2.5f);
+        tutorialComplete = PlayerPrefs.GetInt(TUTORIALCOMPLETE, 0);
 
         options_ResolutionDrop.RefreshShownValue();
 
@@ -66,6 +74,21 @@ public class MainMenuManager : MonoBehaviour
         else
         {
             Screen.fullScreen = false;
+        }
+
+        if(tutorialComplete == 1)
+        {
+            FreePlayButtonGO.GetComponent<Button>().interactable = true;
+            FreePlayButtonText.GetComponent<Button>().interactable = true;
+            GalleryButtonGO.GetComponent<Button>().interactable = true;
+            GalleryButtonText.GetComponent<Button>().interactable = true;
+        }
+        else
+        {
+            FreePlayButtonGO.GetComponent<Button>().interactable = false;
+            FreePlayButtonText.GetComponent<Button>().interactable = false;
+            GalleryButtonGO.GetComponent<Button>().interactable = false;
+            GalleryButtonText.GetComponent<Button>().interactable = false;
         }
     }
 
@@ -91,14 +114,9 @@ public class MainMenuManager : MonoBehaviour
         StartCoroutine(LoadingScreen("Test"));
     }
 
-    public void ScavHuntButton()
-    {
-        StartCoroutine(LoadingScreen("scav"));
-    }
-
     public void TutorialButton()
     {
-
+        StartCoroutine(LoadingScreen("tutorial"));
     }
 
     public void GalleryButton()

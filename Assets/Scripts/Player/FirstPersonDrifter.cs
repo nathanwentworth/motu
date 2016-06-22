@@ -136,9 +136,9 @@ public class FirstPersonDrifter: MonoBehaviour
  
             // If we were falling, and we fell a vertical distance greater than the threshold, run a falling damage routine
 
-            Vector3 horizontalVelocity = controller.velocity;
-            horizontalVelocity = new Vector3(controller.velocity.x, 0, controller.velocity.z);
-            float horizontalSpeed = horizontalVelocity.magnitude;
+            //Vector3 horizontalVelocity = controller.velocity;
+            //horizontalVelocity = new Vector3(controller.velocity.x, 0, controller.velocity.z);
+            //float horizontalSpeed = horizontalVelocity.magnitude;
 
             // if (Mathf.Abs(overallSpeed) > 0) {
               // play sounds!!!!!!
