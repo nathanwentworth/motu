@@ -21,6 +21,7 @@ public class GalleryManager : MonoBehaviour
     public Text PhotoCounter;
     public Text txt_PhotoMode;
     public Text txt_PhotoDate;
+    public GameObject panel_noPhoto;
 
     public Text PhotosTaken;
     public Text TripsCompleted;
@@ -46,6 +47,9 @@ public class GalleryManager : MonoBehaviour
         if (allFiles.Length > 0)
         {
             StartCoroutine(CreateImages());
+            panel_noPhoto.SetActive(false);
+        } else {
+          panel_noPhoto.SetActive(true);
         }
     }
 
@@ -157,7 +161,7 @@ public class GalleryManager : MonoBehaviour
         dateTimeArr = dateTime.Split(dateTimeSplit);
         txt_PhotoDate.text = "PHOTO TAKEN ON:\n" + dateTimeArr[1] + " / " + dateTimeArr[2] + " / " + dateTimeArr[3] + " at " + dateTimeArr[4] + ":" + dateTimeArr[5] + ":" + dateTimeArr[6];
         if (dateTimeArr[0] == "0") photoMode = "TAKEN IN:\nFREE MODE";
-        else photoMode = "TAKEN IN:\nSCAVENGER HUNT";
+        else photoMode = "TAKEN IN:\nTUTORIAL";
         txt_PhotoMode.text = photoMode;
         zoomPhotoCounter = currentlyViewedPhoto + "/" + allFiles.Length;
         PhotoCounter.text = zoomPhotoCounter;
