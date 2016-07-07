@@ -103,6 +103,10 @@ public class GalleryManager : MonoBehaviour
         Debug.Log("Deleted photo " + currentlyViewedPhoto.ToString() + ".");
         currentlyViewedPhoto = 0;
         CloseZoom();
+        if(NumberOfPhotos() == 0)
+        {
+            panel_noPhoto.SetActive(true);
+        }
     }
 
     public static float NumberOfPhotos()
