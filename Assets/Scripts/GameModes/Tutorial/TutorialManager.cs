@@ -95,6 +95,8 @@ public class TutorialManager : MonoBehaviour
 
         if (Input.GetButtonDown("Fire1"))
         {
+			//Gets the MusicManager script, fires off the sound for taking a photo
+			GameObject.Find("SoundManager").GetComponent<MusicManager>().CameraClick();
             RenderTexture rt = new RenderTexture((int)resWidth, (int)resHeight, 24);
             photoCamera.targetTexture = rt;
             Texture2D screenShot = new Texture2D((int)resWidth, (int)resHeight, TextureFormat.RGB24, false);

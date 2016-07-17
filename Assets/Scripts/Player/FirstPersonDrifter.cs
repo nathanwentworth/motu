@@ -57,6 +57,8 @@ public class FirstPersonDrifter: MonoBehaviour
     private float inputX;
     private float inputY;
     private Manager gameManager;
+
+	public AudioSource footsteps;
  
     void Start()
     {
@@ -140,7 +142,8 @@ public class FirstPersonDrifter: MonoBehaviour
             //horizontalVelocity = new Vector3(controller.velocity.x, 0, controller.velocity.z);
             //float horizontalSpeed = horizontalVelocity.magnitude;
 
-            // if (Mathf.Abs(overallSpeed) > 0) {
+            //play footsteps
+			//if (Mathf.Abs(overallSpeed) > 0) {
               // play sounds!!!!!!
             // }
 

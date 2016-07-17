@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 
@@ -38,6 +39,11 @@ public class MainMenuManager : MonoBehaviour
     private bool wasFullscreenChanged = false;
     private int tutorialComplete = 0;
 
+	[Header("AudioSources")]
+	public AudioSource Confirm;
+	public AudioSource Deny;
+	public AudioMixerSnapshot END;
+	
 
     void Start()
     {
@@ -111,27 +117,35 @@ public class MainMenuManager : MonoBehaviour
 
     public void FreePlayButton()
     {
+		Confirm.Play ();
+		END.TransitionTo (5);
         StartCoroutine(LoadingScreen("Test"));
     }
 
     public void TutorialButton()
     {
+		Confirm.Play ();
+		END.TransitionTo (5);
         StartCoroutine(LoadingScreen("tutorial"));
     }
 
     public void GalleryButton()
     {
+		Confirm.Play ();
         StartCoroutine(LoadingScreen("GalleryTest"));
     }
 
     public void OptionsButton()
     {
+		Confirm.Play ();
         MainContainer.SetActive(false);
         OptionsContainer.SetActive(true);
     }
 
     public void QuitButton()
     {
+		Deny.Play ();
+		END.TransitionTo (1);
         Application.Quit();
     }
 
@@ -147,6 +161,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void Options_Save()
     {
+		Confirm.Play ();
         PlayerPrefs.SetInt(FULLSCREENKEY, options_FullOrWindDrop.value);
         PlayerPrefs.SetFloat(MOUSESENSITIVITYKEY, options_MouseSensitivity.value);
         PlayerPrefs.SetInt(RESOLUTIONKEY, options_ResolutionDrop.value);
