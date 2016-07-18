@@ -32,6 +32,7 @@ public class TutorialManager : MonoBehaviour
 
     void Start()
     {
+        MusicManager.Instance.StartCoroutine(MusicManager.Instance.Playlist());
         LockMouse.Lock();
         Time.timeScale = 1;
         tutIndex = 0;
@@ -89,6 +90,8 @@ public class TutorialManager : MonoBehaviour
         else if(objTrigger1 && objTrigger2 && tutIndex == tutArr3.Length)
         {
             PlayerPrefs.SetInt(TUTORIALCOMPLETE, 1);
+            MusicManager.Instance.StopPlayList();
+            MusicManager.Instance.StopAllMusic();
             SceneManager.LoadScene("MainMenuTest");
         }
 

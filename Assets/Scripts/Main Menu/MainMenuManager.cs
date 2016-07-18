@@ -43,6 +43,10 @@ public class MainMenuManager : MonoBehaviour
 
     void Start()
     {
+        if (!MusicManager.Instance.Cpio.isPlaying)
+        {
+            MusicManager.Instance.MainMenuMusic();
+        }
         DontDestroyOnLoad(soundManager);
         if (System.IO.Directory.Exists(Application.persistentDataPath + "/Photos/") != true)
         {
@@ -115,6 +119,7 @@ public class MainMenuManager : MonoBehaviour
     public void FreePlayButton()
     {
         MusicManager.Instance.PlayConfirm();
+        MusicManager.Instance.StopAllMusic();
         //END.TransitionTo (5);
         StartCoroutine(LoadingScreen("Test"));
     }
@@ -122,6 +127,7 @@ public class MainMenuManager : MonoBehaviour
     public void TutorialButton()
     {
         MusicManager.Instance.PlayConfirm();
+        MusicManager.Instance.StopAllMusic();
         //END.TransitionTo (5);
         StartCoroutine(LoadingScreen("tutorial"));
     }

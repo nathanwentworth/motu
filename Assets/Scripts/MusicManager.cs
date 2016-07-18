@@ -7,6 +7,7 @@ public class MusicManager : MonoBehaviour {
 	public AudioSource Hymn;
 	public AudioSource Rain;
 	public AudioSource Emerge;
+    public AudioSource Cpio;
     public AudioSource Confirm;
     public AudioSource Deny;
 	private int PlaylistNumber;
@@ -25,19 +26,18 @@ public class MusicManager : MonoBehaviour {
             // If that is the case, we destroy other instances
             Destroy(gameObject);
         }
+        else {
 
-        // Here we save our singleton instance
-        Instance = this;
+            // Here we save our singleton instance
+            Instance = this;
 
-        // Furthermore we make sure that we don't destroy between scenes (this is optional)
-        DontDestroyOnLoad(gameObject);
+            // Furthermore we make sure that we don't destroy between scenes (this is optional)
+            DontDestroyOnLoad(gameObject);
+        }
     }
 	// Use this for initialization
-	void Start () {
-		StartCoroutine ("Playlist");
-	}
 	
-	IEnumerator Playlist(){
+	public IEnumerator Playlist(){
 		PlaylistNumber = Mathf.RoundToInt(Random.Range (1, 4));
 		print (PlaylistNumber);
 		switch (PlaylistNumber) {
@@ -73,6 +73,25 @@ public class MusicManager : MonoBehaviour {
                 }
 		}
 	}
+
+    public void MainMenuMusic()
+    {
+        Cpio.Play();
+        Cpio.loop = true;
+    }
+
+    public void StopAllMusic()
+    {
+        Cpio.Stop();
+        Rain.Stop();
+        Emerge.Stop();
+        Hymn.Stop();
+    }
+
+    public void StopPlayList()
+    {
+        StopCoroutine(Playlist());
+    }
 
     public void PlayConfirm()
     {

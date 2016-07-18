@@ -48,6 +48,7 @@ public class Manager : MonoBehaviour
 
     void Start()
     {
+        MusicManager.Instance.StartCoroutine(MusicManager.Instance.Playlist());
         unPause();
 		if (System.IO.Directory.Exists (Application.persistentDataPath + "/Photos/") != true) {
 			Debug.Log ("Creating Photos Directory");
@@ -173,6 +174,8 @@ public class Manager : MonoBehaviour
     public void ExitToMainMenu()
     {
         MusicManager.Instance.PlayDeny();
+        MusicManager.Instance.StopPlayList();
+        MusicManager.Instance.StopAllMusic();
         SceneManager.LoadScene("MainMenuTest");
     }
 
