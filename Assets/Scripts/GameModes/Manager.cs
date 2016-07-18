@@ -46,11 +46,6 @@ public class Manager : MonoBehaviour
     private bool wasResolutionChanged = false;
     private bool wasFullscreenChanged = false;
 
-	[Header("AudioSources")]
-	public AudioSource Confirm;
-	public AudioSource Deny;
-	public AudioMixerSnapshot END;
-
     void Start()
     {
         unPause();
@@ -124,8 +119,8 @@ public class Manager : MonoBehaviour
         //Take a picture 
         if (Input.GetButtonDown("Fire1") && !isPaused)
         {
-			//Gets the MusicManager script, fires off the sound for taking a photo
-			GameObject.Find("SoundManager").GetComponent<MusicManager>().CameraClick();
+            //Gets the MusicManager script, fires off the sound for taking a photo
+            MusicManager.Instance.PlayCameraClick();
 
             RenderTexture rt = new RenderTexture((int)resWidth, (int)resHeight, 24);
             photoCamera.targetTexture = rt;
@@ -170,20 +165,20 @@ public class Manager : MonoBehaviour
 
     public void OptionsButton()
     {
-		Confirm.Play ();
+        MusicManager.Instance.PlayConfirm();
         MainContainer.SetActive(false);
         OptionsContainer.SetActive(true);
     }
 
     public void ExitToMainMenu()
     {
-		Deny.Play ();
+        MusicManager.Instance.PlayDeny();
         SceneManager.LoadScene("MainMenuTest");
     }
 
     public void Quit()
     {
-		END.TransitionTo (1);
+		//END.TransitionTo (1);
         Application.Quit();
     }
 
@@ -199,7 +194,7 @@ public class Manager : MonoBehaviour
 
     public void Options_Save()
     {
-		Confirm.Play ();
+        MusicManager.Instance.PlayConfirm();
         PlayerPrefs.SetInt(FULLSCREENKEY, options_FullOrWindDrop.value);
         PlayerPrefs.SetFloat(MOUSESENSITIVITYKEY, options_MouseSensitivity.value);
         PlayerPrefs.SetInt(RESOLUTIONKEY, options_ResolutionDrop.value);

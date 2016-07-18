@@ -39,10 +39,6 @@ public class GalleryManager : MonoBehaviour
     private string photoMode;
     private string zoomPhotoCounter;
 
-	[Header("AudioSources")]
-	public AudioSource Confirm;
-	public AudioSource Deny;
-
     void Start()
     {
         Time.timeScale = 1;
@@ -82,7 +78,7 @@ public class GalleryManager : MonoBehaviour
 
     public void DeletePhoto()
     {
-		Deny.Play ();
+        MusicManager.Instance.PlayDeny();
         File.Delete(allFiles[currentlyViewedPhoto - 1].ToString());
         Destroy(PhotosList[currentlyViewedPhoto - 1]);
         PhotosList.RemoveAt(currentlyViewedPhoto - 1);
@@ -146,7 +142,7 @@ public class GalleryManager : MonoBehaviour
 
     public void MainMenu()
     {
-		Confirm.Play ();
+        MusicManager.Instance.PlayDeny();
         SceneManager.LoadScene("MainMenuTest");
     }
 

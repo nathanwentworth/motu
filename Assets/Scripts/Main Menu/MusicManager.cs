@@ -7,6 +7,8 @@ public class MusicManager : MonoBehaviour {
 	public AudioSource Hymn;
 	public AudioSource Rain;
 	public AudioSource Emerge;
+    public AudioSource Confirm;
+    public AudioSource Deny;
 	private int PlaylistNumber;
 	[Header("CameraClicks")]
 	private int WhichClick;
@@ -14,6 +16,22 @@ public class MusicManager : MonoBehaviour {
 	public AudioSource CameraClick2;
 	public AudioSource CameraClick3;
 
+    public static MusicManager Instance { get; private set; }
+    
+    void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            // If that is the case, we destroy other instances
+            Destroy(gameObject);
+        }
+
+        // Here we save our singleton instance
+        Instance = this;
+
+        // Furthermore we make sure that we don't destroy between scenes (this is optional)
+        DontDestroyOnLoad(gameObject);
+    }
 	// Use this for initialization
 	void Start () {
 		StartCoroutine ("Playlist");
@@ -56,7 +74,17 @@ public class MusicManager : MonoBehaviour {
 		}
 	}
 
-	public void CameraClick () {
+    public void PlayConfirm()
+    {
+        Confirm.Play();
+    }
+
+    public void PlayDeny()
+    {
+        Deny.Play();
+    }
+
+	public void PlayCameraClick () {
 		WhichClick = Mathf.RoundToInt(Random.Range (1, 4));
 		print (WhichClick);
 		switch (WhichClick) {

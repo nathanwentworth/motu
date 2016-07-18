@@ -26,6 +26,7 @@ public class MainMenuManager : MonoBehaviour
     public Slider options_MouseSensitivity;
     public Text options_VolumeSliderValue;
     public Text options_MouseSliderValue;
+    public GameObject soundManager;
 
     private string VOLUMEKEY = "VOLUME_VALUE";
     private string RESOLUTIONKEY = "RESOLUTION_VALUE";
@@ -38,15 +39,11 @@ public class MainMenuManager : MonoBehaviour
     private bool wasResolutionChanged = false;
     private bool wasFullscreenChanged = false;
     private int tutorialComplete = 0;
-
-	[Header("AudioSources")]
-	public AudioSource Confirm;
-	public AudioSource Deny;
-	public AudioMixerSnapshot END;
 	
 
     void Start()
     {
+        DontDestroyOnLoad(soundManager);
         if (System.IO.Directory.Exists(Application.persistentDataPath + "/Photos/") != true)
         {
             Debug.Log("Creating Photos Directory");
@@ -117,35 +114,35 @@ public class MainMenuManager : MonoBehaviour
 
     public void FreePlayButton()
     {
-		Confirm.Play ();
-		END.TransitionTo (5);
+        MusicManager.Instance.PlayConfirm();
+        //END.TransitionTo (5);
         StartCoroutine(LoadingScreen("Test"));
     }
 
     public void TutorialButton()
     {
-		Confirm.Play ();
-		END.TransitionTo (5);
+        MusicManager.Instance.PlayConfirm();
+        //END.TransitionTo (5);
         StartCoroutine(LoadingScreen("tutorial"));
     }
 
     public void GalleryButton()
     {
-		Confirm.Play ();
+        MusicManager.Instance.PlayConfirm();
         StartCoroutine(LoadingScreen("GalleryTest"));
     }
 
     public void OptionsButton()
     {
-		Confirm.Play ();
+        MusicManager.Instance.PlayConfirm();
         MainContainer.SetActive(false);
         OptionsContainer.SetActive(true);
     }
 
     public void QuitButton()
     {
-		Deny.Play ();
-		END.TransitionTo (1);
+        MusicManager.Instance.PlayDeny();
+        //END.TransitionTo (1);
         Application.Quit();
     }
 
@@ -161,7 +158,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void Options_Save()
     {
-		Confirm.Play ();
+        MusicManager.Instance.PlayConfirm();
         PlayerPrefs.SetInt(FULLSCREENKEY, options_FullOrWindDrop.value);
         PlayerPrefs.SetFloat(MOUSESENSITIVITYKEY, options_MouseSensitivity.value);
         PlayerPrefs.SetInt(RESOLUTIONKEY, options_ResolutionDrop.value);
