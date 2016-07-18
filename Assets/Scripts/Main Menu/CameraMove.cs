@@ -8,7 +8,7 @@ public class CameraMove : MonoBehaviour {
 	// void Awake () {  }
 	// void Start () {  }
 	void Update () {
-        transform.Rotate(new Vector3(0, Time.deltaTime * 5, 0));
+        transform.Rotate(new Vector3(0, Time.deltaTime * 2, 0));
     }
 	// void FixedUpdate () {  }
 
