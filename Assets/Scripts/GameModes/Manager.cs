@@ -46,8 +46,11 @@ public class Manager : MonoBehaviour
     private bool wasResolutionChanged = false;
     private bool wasFullscreenChanged = false;
 
+	public AudioMixerSnapshot DEFAULT;
+
     void Start()
     {
+		DEFAULT.TransitionTo (3);
         MusicManager.Instance.StartCoroutine(MusicManager.Instance.Playlist());
         unPause();
 		if (System.IO.Directory.Exists (Application.persistentDataPath + "/Photos/") != true) {

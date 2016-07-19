@@ -39,6 +39,8 @@ public class MainMenuManager : MonoBehaviour
     private bool wasResolutionChanged = false;
     private bool wasFullscreenChanged = false;
     private int tutorialComplete = 0;
+
+	public AudioMixerSnapshot END;
 	
 
     void Start()
@@ -119,16 +121,16 @@ public class MainMenuManager : MonoBehaviour
     public void FreePlayButton()
     {
         MusicManager.Instance.PlayConfirm();
-        MusicManager.Instance.StopAllMusic();
-        //END.TransitionTo (5);
+        END.TransitionTo (5);
+		//MusicManager.Instance.StopAllMusic();
         StartCoroutine(LoadingScreen("Test"));
     }
 
     public void TutorialButton()
     {
         MusicManager.Instance.PlayConfirm();
-        MusicManager.Instance.StopAllMusic();
-        //END.TransitionTo (5);
+        END.TransitionTo (5);
+		//MusicManager.Instance.StopAllMusic();
         StartCoroutine(LoadingScreen("tutorial"));
     }
 
@@ -148,7 +150,7 @@ public class MainMenuManager : MonoBehaviour
     public void QuitButton()
     {
         MusicManager.Instance.PlayDeny();
-        //END.TransitionTo (1);
+        END.TransitionTo (1);
         Application.Quit();
     }
 
