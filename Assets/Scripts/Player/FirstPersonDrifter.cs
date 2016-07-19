@@ -57,8 +57,10 @@ public class FirstPersonDrifter: MonoBehaviour
     private float inputX;
     private float inputY;
     private Manager gameManager;
+    private float footCoolDown;
 
-	public AudioSource footsteps;
+	public AudioSource[] footsteps;
+    public AudioSource landing;
  
     void Start()
     {
@@ -142,13 +144,10 @@ public class FirstPersonDrifter: MonoBehaviour
             //horizontalVelocity = new Vector3(controller.velocity.x, 0, controller.velocity.z);
             //float horizontalSpeed = horizontalVelocity.magnitude;
 
-            //play footsteps
-			//if (Mathf.Abs(overallSpeed) > 0) {
-              // play sounds!!!!!!
-            // }
-
             if (falling) {
                 falling = false;
+                landing.Play();
+                Debug.Log("Playing Landing;");
                 if (myTransform.position.y < fallStartLevel - fallingDamageThreshold)
                     FallingDamageAlert (fallStartLevel - myTransform.position.y);
             }
@@ -196,7 +195,22 @@ public class FirstPersonDrifter: MonoBehaviour
                 moveDirection = myTransform.TransformDirection(moveDirection);
             }
         }
- 
+
+        if (Mathf.Abs(inputY) + Mathf.Abs(inputX) > 0 && grounded)
+        {
+            if (footCoolDown < 0)
+            {
+                int number = Random.Range(0, 1);
+                footsteps[number].Play();
+                footCoolDown = .35f;
+            }
+            else
+            {
+                footCoolDown -= Time.deltaTime;
+            }
+        }
+        
+
         // Apply gravity
         moveDirection.y -= gravity * Time.deltaTime;
  
