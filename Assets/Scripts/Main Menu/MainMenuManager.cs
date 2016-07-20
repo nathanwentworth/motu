@@ -17,6 +17,7 @@ public class MainMenuManager : MonoBehaviour
     public GameObject FreePlayButtonText;
     public GameObject GalleryButtonGO;
     public GameObject GalleryButtonText;
+    public GameObject CreditsPanel;
     private AsyncOperation sync;
     private bool startAnimation;
 
@@ -39,6 +40,7 @@ public class MainMenuManager : MonoBehaviour
     private bool wasResolutionChanged = false;
     private bool wasFullscreenChanged = false;
     private int tutorialComplete = 0;
+    private bool creditsDisplayed;
 
 	public AudioMixerSnapshot END;
 	
@@ -62,6 +64,10 @@ public class MainMenuManager : MonoBehaviour
         OptionsContainer.SetActive(false);
         MainContainer.SetActive(true);
         LockMouse.Unlock();
+
+        // hide the credits panel on start
+        creditsDisplayed = false;
+        CreditsPanel.GetComponent<CanvasGroup>().alpha = 0;
 
         options_ResolutionDrop.options.Clear();
         for (int i = 0; i < Screen.resolutions.Length; i++)
@@ -147,6 +153,18 @@ public class MainMenuManager : MonoBehaviour
         OptionsContainer.SetActive(true);
     }
 
+    public void CreditsDisplay()
+    {
+        if (creditsDisplayed) {
+            creditsDisplayed = false;
+            CreditsPanel.GetComponent<CanvasGroup>().alpha = 0;
+        } else {
+            creditsDisplayed = true;
+            CreditsPanel.GetComponent<CanvasGroup>().alpha = 1;
+        }
+        // StartCoroutine(FadeScreen());
+    }
+
     public void QuitButton()
     {
         MusicManager.Instance.PlayDeny();
@@ -216,5 +234,24 @@ public class MainMenuManager : MonoBehaviour
         }
         yield return null;
     }
+
+    // IEnumerator FadeScreen() {
+    //     float start;
+    //     float end;
+    //     float elapsed = 0;
+    //     if (creditsDisplayed) {
+    //         start = 0f;
+    //         end = 1f;
+    //     } else {
+    //         start = 1f;
+    //         end = 0f;
+    //     }
+    //     while (elapsed < 1) {
+    //         elapsed += Time.deltaTime;
+    //         print(elapsed);
+    //         CreditsPanel.GetComponent<CanvasGroup>().alpha = Mathf.Lerp(start, end, Time.deltaTime);
+    //     }
+    //     yield return null;
+    // }
 
 }
