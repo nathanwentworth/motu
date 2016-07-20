@@ -43,6 +43,7 @@ public class Manager : MonoBehaviour
     private string RESOLUTIONKEY = "RESOLUTION_VALUE";
     private string FULLSCREENKEY = "FULLSCREEN_VALUE";
     private string MOUSESENSITIVITYKEY = "MOUSESENSITIVITY_KEY";
+    private string TRIPSTAKEN = "TRIPS_TAKEN";
     private bool wasResolutionChanged = false;
     private bool wasFullscreenChanged = false;
 
@@ -51,9 +52,15 @@ public class Manager : MonoBehaviour
     void Start()
     {
 		DEFAULT.TransitionTo (3);
+        MusicManager.Instance.StopAllMusic();
         MusicManager.Instance.StartCoroutine(MusicManager.Instance.Playlist());
-        unPause();
-		if (System.IO.Directory.Exists (Application.persistentDataPath + "/Photos/") != true) {
+        isPaused = false;
+        isAnotherUIActive = false;
+        Time.timeScale = 1.0f;
+        LockMouse.Lock();
+        pauseBG.SetActive(false);
+        AudioListener.pause = false;
+        if (System.IO.Directory.Exists (Application.persistentDataPath + "/Photos/") != true) {
 			Debug.Log ("Creating Photos Directory");
 			System.IO.Directory.CreateDirectory (Application.persistentDataPath + "/Photos/");
 		}
@@ -74,6 +81,7 @@ public class Manager : MonoBehaviour
         options_MouseSensitivity.value = PlayerPrefs.GetFloat(MOUSESENSITIVITYKEY, 2.5f);
 
         options_ResolutionDrop.RefreshShownValue();
+        PlayerPrefs.SetInt(TRIPSTAKEN, PlayerPrefs.GetInt(TRIPSTAKEN) + 1);
     }
 
     void FixedUpdate()
@@ -144,11 +152,12 @@ public class Manager : MonoBehaviour
 
     public static string ScreenShotName(int currentGameMode)
     {
-		return string.Format("{0}/TitleHere_{1}_{2}.png", Application.persistentDataPath + "/Photos", currentGameMode, DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"));
+		return string.Format("{0}/OuterWorld_{1}_{2}.png", Application.persistentDataPath + "/Photos", currentGameMode, DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"));
     }
 
     private void Pause()
     {
+        MusicManager.Instance.PlayConfirm();
         isAnotherUIActive = true;
         isPaused = true;
         Time.timeScale = 0.0f;
@@ -159,6 +168,7 @@ public class Manager : MonoBehaviour
 
     public void unPause()
     {
+        MusicManager.Instance.PlayConfirm();
         isPaused = false;
         isAnotherUIActive = false;
         Time.timeScale = 1.0f;
@@ -230,7 +240,7 @@ public class Manager : MonoBehaviour
             Debug.Log(Screen.resolutions[options_ResolutionDrop.value]);
         }
 
-        Debug.Log(Screen.fullScreen);
+        MusicManager.Instance.SetMusicVolume(options_VolumeSlider.value);
 
         MainContainer.SetActive(true);
         OptionsContainer.SetActive(false);

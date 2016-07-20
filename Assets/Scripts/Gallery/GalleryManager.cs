@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using UnityEngine.SceneManagement;
+using System;
 
 public class GalleryManager : MonoBehaviour
 {
@@ -22,6 +23,9 @@ public class GalleryManager : MonoBehaviour
     public Text txt_PhotoMode;
     public Text txt_PhotoDate;
     public GameObject panel_noPhoto;
+    public Text txt_SavedTo;
+    public GameObject panel_SavedTo;
+    public GameObject panel_DeleteConfirm;
 
     public Text PhotosTaken;
     public Text TripsCompleted;
@@ -38,9 +42,11 @@ public class GalleryManager : MonoBehaviour
     private int currentlyViewedPhoto;
     private string photoMode;
     private string zoomPhotoCounter;
+    private string TRIPSTAKEN = "TRIPS_TAKEN";
 
     void Start()
     {
+        TripsCompleted.text = string.Format("{0} TRIPS COMPLETED", PlayerPrefs.GetInt(TRIPSTAKEN));
         Time.timeScale = 1;
         PhotosArray();
         if (allFiles.Length > 0)
@@ -63,22 +69,30 @@ public class GalleryManager : MonoBehaviour
         }
     }
 
-    public void ClickedNothing()
-    {
-        currentlyViewedPhoto = 0;
-        Debug.Log("Clicked on nothing.");
-    }
-
     public void CloseZoom()
     {
+        MusicManager.Instance.PlayDeny();
         panel_ZoomScreen.SetActive(false);
         panel_Main.GetComponent<CanvasGroup>().alpha = 1;
         panel_Main.GetComponent<CanvasGroup>().interactable = true;
     }
 
-    public void DeletePhoto()
+    public void DeletePhotoConfirmation()
+    {
+        MusicManager.Instance.PlayConfirm();
+        panel_DeleteConfirm.SetActive(true);
+    }
+
+    public void DeletePhotoCanel()
     {
         MusicManager.Instance.PlayDeny();
+        panel_DeleteConfirm.SetActive(false);
+    }
+
+    public void DeletePhoto()
+    {
+        panel_DeleteConfirm.SetActive(false);
+        MusicManager.Instance.PlayConfirm();
         File.Delete(allFiles[currentlyViewedPhoto - 1].ToString());
         Destroy(PhotosList[currentlyViewedPhoto - 1]);
         PhotosList.RemoveAt(currentlyViewedPhoto - 1);
@@ -102,8 +116,10 @@ public class GalleryManager : MonoBehaviour
         PhotosArray();
         Debug.Log("Deleted photo " + currentlyViewedPhoto.ToString() + ".");
         currentlyViewedPhoto = 0;
-        CloseZoom();
-        if(NumberOfPhotos() == 0)
+        panel_ZoomScreen.SetActive(false);
+        panel_Main.GetComponent<CanvasGroup>().alpha = 1;
+        panel_Main.GetComponent<CanvasGroup>().interactable = true;
+        if (NumberOfPhotos() == 0)
         {
             panel_noPhoto.SetActive(true);
         }
@@ -112,19 +128,18 @@ public class GalleryManager : MonoBehaviour
     public static float NumberOfPhotos()
     {
         int totalFiles = 0;
-        totalFiles = Directory.GetFiles(UnityEngine.Application.persistentDataPath + "/Photos/", "TitleHere*.png").Length;
+        totalFiles = Directory.GetFiles(UnityEngine.Application.persistentDataPath + "/Photos/", "OuterWorld*.png").Length;
         return totalFiles;
     }
 
     public void PhotosArray()
     {
         DirectoryInfo di = new DirectoryInfo(UnityEngine.Application.persistentDataPath + "/Photos/");
-        allFiles = di.GetFiles("TitleHere*.png");
+        allFiles = di.GetFiles("OuterWorld*.png");
     }
 
     public void SavePhoto()
     {
-        Debug.Log("Saving photo...." + currentlyViewedPhoto);
         if (UnityEngine.Application.platform == RuntimePlatform.WindowsPlayer || UnityEngine.Application.platform == RuntimePlatform.WindowsEditor)
         {
             SaveFileDialog save = new SaveFileDialog();
@@ -148,6 +163,7 @@ public class GalleryManager : MonoBehaviour
 
     public void NextPrev(int indexChange)
     {
+        MusicManager.Instance.PlayConfirm();
         if (currentlyViewedPhoto > 0 || currentlyViewedPhoto < allFiles.Length)
         {
             currentlyViewedPhoto = currentlyViewedPhoto + indexChange;
@@ -159,9 +175,10 @@ public class GalleryManager : MonoBehaviour
 
     public void ViewPhoto(int photoNumber)
     {
+        MusicManager.Instance.PlayConfirm();
         currentlyViewedPhoto = photoNumber;
         dateTime = allFiles[photoNumber - 1].ToString();
-        dateTime = dateTime.Replace(UnityEngine.Application.persistentDataPath.ToString() + "/Photos/TitleHere_", "");
+        dateTime = dateTime.Replace(UnityEngine.Application.persistentDataPath.ToString() + "/Photos/OuterWorld_", "");
         dateTime = dateTime.Replace(".png", "");
         dateTimeArr = dateTime.Split(dateTimeSplit);
         txt_PhotoDate.text = "PHOTO TAKEN ON:\n" + dateTimeArr[1] + " / " + dateTimeArr[2] + " / " + dateTimeArr[3] + " at " + dateTimeArr[4] + ":" + dateTimeArr[5] + ":" + dateTimeArr[6];
@@ -174,16 +191,20 @@ public class GalleryManager : MonoBehaviour
         if ((photoNumber + 1) <= allFiles.Length)
         {
             img_NextImage.GetComponent<RawImage>().texture = GameObject.Find("Photo " + (photoNumber + 1)).GetComponent<RawImage>().texture;
+            img_NextImage.GetComponent<UnityEngine.UI.Button>().interactable = true;
         }
         else {
             img_NextImage.GetComponent<RawImage>().texture = null;
+            img_NextImage.GetComponent<UnityEngine.UI.Button>().interactable = false;
         }
         if ((photoNumber - 1) > 0)
         {
             img_PrevImage.GetComponent<RawImage>().texture = GameObject.Find("Photo " + (photoNumber - 1)).GetComponent<RawImage>().texture;
+            img_PrevImage.GetComponent<UnityEngine.UI.Button>().interactable = true;
         }
         else {
             img_PrevImage.GetComponent<RawImage>().texture = null;
+            img_PrevImage.GetComponent<UnityEngine.UI.Button>().interactable = false;
         }
         panel_ZoomScreen.SetActive(true);
         panel_Main.GetComponent<CanvasGroup>().alpha = 0;
@@ -203,7 +224,6 @@ public class GalleryManager : MonoBehaviour
             www.LoadImageIntoTexture(image);
             //Create photo in game
             GameObject photo = Instantiate(PhotoPrefab);
-            Debug.Log(string.Format("Creating photo {0}.", photoNumber + 1));
             //Set the texture to the photo
             photo.transform.SetParent(PhotoContainer.transform);
             photo.GetComponent<RawImage>().texture = image;
@@ -218,15 +238,31 @@ public class GalleryManager : MonoBehaviour
 
     IEnumerator Save(int photoNumber, string path)
     {
-        Texture2D image = new Texture2D(2, 2);
-        Debug.Log(allFiles[photoNumber - 1]);
-        WWW www = new WWW("file://" + allFiles[photoNumber - 1].ToString());
-        yield return www;
-        //Load it as a texture
-        www.LoadImageIntoTexture(image);
-        byte[] bytes = image.EncodeToPNG();
-        File.WriteAllBytes(path, bytes);
-        Debug.Log("Saving photo to " + path);
-        yield return null;
+        if (string.IsNullOrEmpty(path))
+        {
+            MusicManager.Instance.PlayDeny();
+            yield return null;
+        }
+        else {
+            MusicManager.Instance.PlayConfirm();
+            Texture2D image = new Texture2D(2, 2);
+            Debug.Log(allFiles[photoNumber - 1]);
+            WWW www = new WWW("file://" + allFiles[photoNumber - 1].ToString());
+            yield return www;
+            //Load it as a texture
+            www.LoadImageIntoTexture(image);
+            byte[] bytes = image.EncodeToPNG();
+            File.WriteAllBytes(path, bytes);
+            txt_SavedTo.text = string.Format("Saved Photo to: {0}", path);
+            panel_SavedTo.SetActive(true);
+            yield return new WaitForSeconds(1.5f);
+            while (panel_SavedTo.GetComponent<CanvasGroup>().alpha > 0) {
+                panel_SavedTo.GetComponent<CanvasGroup>().alpha -= Time.deltaTime;
+                yield return new WaitForSeconds(0.01f);
+            }
+            panel_SavedTo.SetActive(false);
+            panel_SavedTo.GetComponent<CanvasGroup>().alpha = 1;
+            yield return null;
+        }
     }
 }

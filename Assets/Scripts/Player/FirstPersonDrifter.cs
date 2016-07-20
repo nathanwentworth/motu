@@ -58,9 +58,6 @@ public class FirstPersonDrifter: MonoBehaviour
     private float inputY;
     private Manager gameManager;
     private float footCoolDown;
-
-	public AudioSource[] footsteps;
-    public AudioSource landing;
  
     void Start()
     {
@@ -146,7 +143,7 @@ public class FirstPersonDrifter: MonoBehaviour
 
             if (falling) {
                 falling = false;
-                landing.Play();
+                MusicManager.Instance.PlayLanding();
                 Debug.Log("Playing Landing;");
                 if (myTransform.position.y < fallStartLevel - fallingDamageThreshold)
                     FallingDamageAlert (fallStartLevel - myTransform.position.y);
@@ -201,7 +198,7 @@ public class FirstPersonDrifter: MonoBehaviour
             if (footCoolDown < 0)
             {
                 int number = Random.Range(0, 1);
-                footsteps[number].Play();
+                MusicManager.Instance.PlayFootstep(number);
                 footCoolDown = .35f;
             }
             else

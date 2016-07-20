@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 using System;
 using UnityEngine.SceneManagement;
+using UnityEngine.Audio;
 
 public class TutorialManager : MonoBehaviour
 {
@@ -24,14 +25,19 @@ public class TutorialManager : MonoBehaviour
     public int zoomMin;
     public int zoomMax;
     private string TUTORIALCOMPLETE = "TUTORIAL_COMPLETE";
+    private string TRIPSTAKEN = "TRIPS_TAKEN";
 
-    private string[] tutArr1 = { "Welcome to OuterWorld Image!", "In this game, you will be taking pictures on an alien planet!", "Use the mouse or right analog stick to look around.",
-        "Use WASD or the left analog stick to move around.", "Press Spacebar or the A button to jump.", "Press Left Shift or the Y button to crouch.", "When you're ready, go to the objective point on the next island!" };
-    private string[] tutArr2 = { "Great job! To use your camera, use the left mouse button or the right trigger.", "To zoom in, use the mouse wheel or the right analog stick.", "Why don't you practice by taking a picture of that strange looking dog over there!" };
-    private string[] tutArr3 = { "Nice Shot! Now that you know the basics, you can play the full game by going to Free Play in the Main Menu.", "To view the photos you have taken, you can go to the Gallery in the Main Menu as well.", "Now Loading the Main Menu. Have fun and enjoy!" };
+    private string[] tutArr1 = { "Welcome to OuterWorld Image!", "In this game, you will be taking pictures on an alien planet!", "Use the mouse to look around.",
+        "Use WASD to move around.", "Press Spacebar to jump.", "Press Left Shift or the Y button to crouch.", "When you're ready, go to the objective point on the next island!" };
+    private string[] tutArr2 = { "Great job! To use your camera, use the left mouse button.", "To zoom in, use the mouse wheel.", "Why don't you practice by taking a picture of that strange looking dog over there!" };
+    private string[] tutArr3 = { "Nice Shot! Now that you know the basics, you can play the full game by going to Free Play in the Main Menu.", "To view the photos you have taken, you can go to Gallery in the Main Menu.", "Now Loading the Main Menu. Have fun and enjoy!" };
+
+    public AudioMixerSnapshot DEFAULT;
 
     void Start()
     {
+        DEFAULT.TransitionTo(3);
+        MusicManager.Instance.StopAllMusic();
         MusicManager.Instance.StartCoroutine(MusicManager.Instance.Playlist());
         LockMouse.Lock();
         Time.timeScale = 1;
@@ -75,6 +81,7 @@ public class TutorialManager : MonoBehaviour
     {
         if (objective1.MovementObjectiveTriggered)
         {
+            MusicManager.Instance.PlayConfirm();
             tutIndex = 0;
             doge.SetActive(true);
             objTrigger1 = true;
@@ -90,6 +97,7 @@ public class TutorialManager : MonoBehaviour
         else if(objTrigger1 && objTrigger2 && tutIndex == tutArr3.Length)
         {
             PlayerPrefs.SetInt(TUTORIALCOMPLETE, 1);
+            PlayerPrefs.SetInt(TRIPSTAKEN, PlayerPrefs.GetInt(TRIPSTAKEN) + 1);
             MusicManager.Instance.StopPlayList();
             MusicManager.Instance.StopAllMusic();
             SceneManager.LoadScene("MainMenuTest");
@@ -120,6 +128,7 @@ public class TutorialManager : MonoBehaviour
             {
                 if(hit.collider.tag == "StretchDog")
                 {
+                    MusicManager.Instance.PlayConfirm();
                     tutIndex = 0;
                     objTrigger2 = true;
                     StopAllCoroutines();
@@ -131,7 +140,7 @@ public class TutorialManager : MonoBehaviour
 
     public static string ScreenShotName(int currentGameMode)
     {
-        return string.Format("{0}/TitleHere_{1}_{2}.png", Application.persistentDataPath + "/Photos", currentGameMode, DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"));
+        return string.Format("{0}/OuterWorld_{1}_{2}.png", Application.persistentDataPath + "/Photos", currentGameMode, DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"));
     }
 
     IEnumerator Timer(float time)

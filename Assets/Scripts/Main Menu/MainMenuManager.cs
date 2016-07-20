@@ -74,7 +74,7 @@ public class MainMenuManager : MonoBehaviour
         {
             options_ResolutionDrop.options.Add(new Dropdown.OptionData(Screen.resolutions[i].ToString()));
         }
-        options_VolumeSlider.value = PlayerPrefs.GetFloat(VOLUMEKEY, 0.75f);
+        options_VolumeSlider.value = PlayerPrefs.GetFloat(VOLUMEKEY, 0.7f);
         options_FullOrWindDrop.value = PlayerPrefs.GetInt(FULLSCREENKEY, 0);
         options_ResolutionDrop.value = PlayerPrefs.GetInt(RESOLUTIONKEY, 0);
         options_MouseSensitivity.value = PlayerPrefs.GetFloat(MOUSESENSITIVITYKEY, 2.5f);
@@ -90,6 +90,8 @@ public class MainMenuManager : MonoBehaviour
         {
             Screen.fullScreen = false;
         }
+
+        MusicManager.Instance.SetMusicVolume(options_VolumeSlider.value);
 
         if(tutorialComplete == 1)
         {
@@ -128,7 +130,6 @@ public class MainMenuManager : MonoBehaviour
     {
         MusicManager.Instance.PlayConfirm();
         END.TransitionTo (5);
-		//MusicManager.Instance.StopAllMusic();
         StartCoroutine(LoadingScreen("Test"));
     }
 
@@ -136,7 +137,6 @@ public class MainMenuManager : MonoBehaviour
     {
         MusicManager.Instance.PlayConfirm();
         END.TransitionTo (5);
-		//MusicManager.Instance.StopAllMusic();
         StartCoroutine(LoadingScreen("tutorial"));
     }
 
@@ -168,7 +168,6 @@ public class MainMenuManager : MonoBehaviour
     public void QuitButton()
     {
         MusicManager.Instance.PlayDeny();
-        END.TransitionTo (1);
         Application.Quit();
     }
 
@@ -214,7 +213,7 @@ public class MainMenuManager : MonoBehaviour
             Debug.Log(Screen.resolutions[options_ResolutionDrop.value]);
         }
 
-        Debug.Log(Screen.fullScreen);
+        MusicManager.Instance.SetMusicVolume(options_VolumeSlider.value);
 
         MainContainer.SetActive(true);
         OptionsContainer.SetActive(false);

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class MusicManager : MonoBehaviour {
 
@@ -16,6 +17,10 @@ public class MusicManager : MonoBehaviour {
 	public AudioSource CameraClick1;
 	public AudioSource CameraClick2;
 	public AudioSource CameraClick3;
+    public AudioSource[] Footsteps;
+    public AudioSource Landing;
+
+    private List<AudioSource> AllMusic = new List<AudioSource>();
 
     public static MusicManager Instance { get; private set; }
     
@@ -33,11 +38,17 @@ public class MusicManager : MonoBehaviour {
 
             // Furthermore we make sure that we don't destroy between scenes (this is optional)
             DontDestroyOnLoad(gameObject);
+
+            AllMusic.Add(Hymn);
+            AllMusic.Add(Rain);
+            AllMusic.Add(Emerge);
+            AllMusic.Add(Cpio);
         }
+
     }
-	// Use this for initialization
-	
-	public IEnumerator Playlist(){
+    // Use this for initialization
+
+    public IEnumerator Playlist(){
 		PlaylistNumber = Mathf.RoundToInt(Random.Range (1, 4));
 		print (PlaylistNumber);
 		switch (PlaylistNumber) {
@@ -118,4 +129,22 @@ public class MusicManager : MonoBehaviour {
 			break;
 		}
 	}
+
+    public void PlayFootstep(int number)
+    {
+        Footsteps[number].Play();
+    }
+
+    public void PlayLanding()
+    {
+        Landing.Play();
+    }
+
+    public void SetMusicVolume(float volume)
+    {
+        for(int i = 0; i < AllMusic.Capacity; i++)
+        {
+            AllMusic[i].volume = volume;
+        }
+    }
 }
