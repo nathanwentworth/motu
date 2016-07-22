@@ -102,6 +102,11 @@ public class TutorialManager : MonoBehaviour
             MusicManager.Instance.StopAllMusic();
             SceneManager.LoadScene("MainMenuTest");
         }
+        if (Input.GetButtonDown("Cancel")) {
+            MusicManager.Instance.StopPlayList();
+            MusicManager.Instance.StopAllMusic();
+            SceneManager.LoadScene("MainMenuTest");
+        }
 
 
         if (Input.GetButtonDown("Fire1"))
