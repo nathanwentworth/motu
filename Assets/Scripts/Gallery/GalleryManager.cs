@@ -181,8 +181,8 @@ public class GalleryManager : MonoBehaviour
         dateTime = dateTime.Replace(UnityEngine.Application.persistentDataPath.ToString() + "/Photos/OuterWorld_", "");
         dateTime = dateTime.Replace(".png", "");
         dateTimeArr = dateTime.Split(dateTimeSplit);
-        txt_PhotoDate.text = "PHOTO TAKEN ON:\n" + dateTimeArr[2] + " / " + dateTimeArr[3] + " / " + dateTimeArr[4] + " at " + dateTimeArr[5] + ":" + dateTimeArr[6] + ":" + dateTimeArr[7];
-        if (dateTimeArr[1] == "0") photoMode = "TAKEN IN:\nFREE MODE";
+        txt_PhotoDate.text = "PHOTO TAKEN ON:\n" + dateTimeArr[1] + " / " + dateTimeArr[2] + " / " + dateTimeArr[3] + " at " + dateTimeArr[4] + ":" + dateTimeArr[5] + ":" + dateTimeArr[6];
+        if (dateTimeArr[0] == "0") photoMode = "TAKEN IN:\nFREE MODE";
         else photoMode = "TAKEN IN:\nTUTORIAL";
         txt_PhotoMode.text = photoMode;
         zoomPhotoCounter = currentlyViewedPhoto + "/" + allFiles.Length;
