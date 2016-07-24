@@ -64,7 +64,7 @@ public class TutorialManager : MonoBehaviour
         }
         else if (objTrigger2 && objTrigger1 && tutIndex <= tutArr3.Length - 1)
         {
-            Debug.Log(tutIndex + " " + tutArr3.Length);
+
             tutText.text = tutArr3[tutIndex];
             StartCoroutine(Timer(6));
         }
@@ -125,7 +125,6 @@ public class TutorialManager : MonoBehaviour
             byte[] bytes = screenShot.EncodeToPNG();
             string filename = ScreenShotName(currentGameMode);
             System.IO.File.WriteAllBytes(filename, bytes);
-            Debug.Log(string.Format("Took picture to: {0}", filename));
 
             RaycastHit hit;
             Ray hitRay = new Ray(mainCam.transform.position, mainCam.transform.forward);

@@ -144,7 +144,7 @@ public class FirstPersonDrifter: MonoBehaviour
             if (falling) {
                 falling = false;
                 MusicManager.Instance.PlayLanding();
-                Debug.Log("Playing Landing;");
+
                 if (myTransform.position.y < fallStartLevel - fallingDamageThreshold)
                     FallingDamageAlert (fallStartLevel - myTransform.position.y);
             }

@@ -61,7 +61,6 @@ public class Manager : MonoBehaviour
         pauseBG.SetActive(false);
         AudioListener.pause = false;
         if (System.IO.Directory.Exists (Application.persistentDataPath + "/Photos/") != true) {
-			Debug.Log ("Creating Photos Directory");
 			System.IO.Directory.CreateDirectory (Application.persistentDataPath + "/Photos/");
 		}
         viewCamera = mainCam.GetComponent<Camera>();
@@ -146,7 +145,6 @@ public class Manager : MonoBehaviour
             byte[] bytes = screenShot.EncodeToPNG();
 			string filename = ScreenShotName (currentGameMode);
 			System.IO.File.WriteAllBytes(filename, bytes);
-            Debug.Log(string.Format("Took picture to: {0}", filename));
         }
     }
 
@@ -237,7 +235,6 @@ public class Manager : MonoBehaviour
         if (wasResolutionChanged)
         {
             Screen.SetResolution(Screen.resolutions[options_ResolutionDrop.value].width, Screen.resolutions[options_ResolutionDrop.value].height, fullscreen, Screen.resolutions[options_ResolutionDrop.value].refreshRate);
-            Debug.Log(Screen.resolutions[options_ResolutionDrop.value]);
         }
 
         MusicManager.Instance.SetMusicVolume(options_VolumeSlider.value);

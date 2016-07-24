@@ -54,7 +54,6 @@ public class MainMenuManager : MonoBehaviour
         DontDestroyOnLoad(soundManager);
         if (System.IO.Directory.Exists(Application.persistentDataPath + "/Photos/") != true)
         {
-            Debug.Log("Creating Photos Directory");
             System.IO.Directory.CreateDirectory(Application.persistentDataPath + "/Photos/");
         }
 
@@ -210,7 +209,6 @@ public class MainMenuManager : MonoBehaviour
         if (wasResolutionChanged)
         {
             Screen.SetResolution(Screen.resolutions[options_ResolutionDrop.value].width, Screen.resolutions[options_ResolutionDrop.value].height, fullscreen, Screen.resolutions[options_ResolutionDrop.value].refreshRate);
-            Debug.Log(Screen.resolutions[options_ResolutionDrop.value]);
         }
 
         MusicManager.Instance.SetMusicVolume(options_VolumeSlider.value);

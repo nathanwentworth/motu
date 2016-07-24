@@ -28,7 +28,6 @@ public class CheckIfBelowLevel : MonoBehaviour
 	
 	private void OnBelowLevel()
 	{
-		Debug.Log("Player fell below level");
 	
 		// reset the player
 		transform.position = startingPosition;

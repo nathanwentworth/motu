@@ -24,7 +24,6 @@ public class PictureSelect : MonoBehaviour {
 
 	public void OnClick()
     {
-        Debug.Log("Selected picture " + photoNumber.ToString()+".");
         gallery.ViewPhoto(photoNumber);
     }
 }

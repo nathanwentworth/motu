@@ -114,7 +114,6 @@ public class GalleryManager : MonoBehaviour
             numberOfPages--;
         }
         PhotosArray();
-        Debug.Log("Deleted photo " + currentlyViewedPhoto.ToString() + ".");
         currentlyViewedPhoto = 0;
         panel_ZoomScreen.SetActive(false);
         panel_Main.GetComponent<CanvasGroup>().alpha = 1;
@@ -178,8 +177,8 @@ public class GalleryManager : MonoBehaviour
         MusicManager.Instance.PlayConfirm();
         currentlyViewedPhoto = photoNumber;
         dateTime = allFiles[photoNumber - 1].ToString();
-        dateTime = dateTime.Replace(UnityEngine.Application.persistentDataPath.ToString() + "/Photos/OuterWorld_", "");
         dateTime = dateTime.Replace(".png", "");
+        dateTime = dateTime.Substring(dateTime.IndexOf('_') + 1);
         dateTimeArr = dateTime.Split(dateTimeSplit);
         txt_PhotoDate.text = "PHOTO TAKEN ON:\n" + dateTimeArr[1] + " / " + dateTimeArr[2] + " / " + dateTimeArr[3] + " at " + dateTimeArr[4] + ":" + dateTimeArr[5] + ":" + dateTimeArr[6];
         if (dateTimeArr[0] == "0") photoMode = "TAKEN IN:\nFREE MODE";
@@ -246,7 +245,6 @@ public class GalleryManager : MonoBehaviour
         else {
             MusicManager.Instance.PlayConfirm();
             Texture2D image = new Texture2D(2, 2);
-            Debug.Log(allFiles[photoNumber - 1]);
             WWW www = new WWW("file://" + allFiles[photoNumber - 1].ToString());
             yield return www;
             //Load it as a texture

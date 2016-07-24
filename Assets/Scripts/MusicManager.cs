@@ -50,7 +50,6 @@ public class MusicManager : MonoBehaviour {
 
     public IEnumerator Playlist(){
 		PlaylistNumber = Mathf.RoundToInt(Random.Range (1, 4));
-		print (PlaylistNumber);
 		switch (PlaylistNumber) {
 		case 1:
                 while (true)
@@ -116,7 +115,6 @@ public class MusicManager : MonoBehaviour {
 
 	public void PlayCameraClick () {
 		WhichClick = Mathf.RoundToInt(Random.Range (1, 4));
-		print (WhichClick);
 		switch (WhichClick) {
 		case 1:
 			CameraClick1.Play ();
