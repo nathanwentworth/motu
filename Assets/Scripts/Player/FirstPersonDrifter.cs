@@ -199,7 +199,7 @@ public class FirstPersonDrifter: MonoBehaviour
             {
                 int number = Random.Range(0, 1);
                 MusicManager.Instance.PlayFootstep(number);
-                footCoolDown = .35f;
+                footCoolDown = .5f;
             }
             else
             {
