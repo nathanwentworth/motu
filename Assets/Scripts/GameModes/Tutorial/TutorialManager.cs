@@ -26,9 +26,10 @@ public class TutorialManager : MonoBehaviour
     public int zoomMax;
     private string TUTORIALCOMPLETE = "TUTORIAL_COMPLETE";
     private string TRIPSTAKEN = "TRIPS_TAKEN";
+    private bool alreadyHitDog = false;
 
     private string[] tutArr1 = { "Welcome to OuterWorld Image!", "In this game, you will be taking pictures on an alien planet!", "Use the mouse to look around.",
-        "Use WASD to move around.", "Press Spacebar to jump.", "Press Left Shift or the Y button to crouch.", "When you're ready, go to the objective point on the next island!" };
+        "Use WASD to move around.", "Press Spacebar to jump.", "Press Left Shift to crouch.", "When you're ready, go to the objective point on the next island!" };
     private string[] tutArr2 = { "Great job! To use your camera, use the left mouse button.", "To zoom in, use the mouse wheel.", "Why don't you practice by taking a picture of that strange looking dog over there!" };
     private string[] tutArr3 = { "Nice Shot! Now that you know the basics, you can play the full game by going to Free Play in the Main Menu.", "To view the photos you have taken, you can go to Gallery in the Main Menu.", "Now Loading the Main Menu. Have fun and enjoy!" };
 
@@ -130,11 +131,12 @@ public class TutorialManager : MonoBehaviour
             Ray hitRay = new Ray(mainCam.transform.position, mainCam.transform.forward);
             if (Physics.Raycast(hitRay, out hit))
             {
-                if(hit.collider.tag == "StretchDog")
+                if(hit.collider.tag == "StretchDog" && !alreadyHitDog)
                 {
                     MusicManager.Instance.PlayConfirm();
                     tutIndex = 0;
                     objTrigger2 = true;
+                    alreadyHitDog = true;
                     StopAllCoroutines();
                     TutorialTextDisp();
                 }
