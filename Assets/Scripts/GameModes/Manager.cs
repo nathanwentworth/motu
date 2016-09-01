@@ -53,7 +53,7 @@ public class Manager : MonoBehaviour
     {
 		DEFAULT.TransitionTo (3);
         MusicManager.Instance.StopAllMusic();
-        MusicManager.Instance.StartCoroutine(MusicManager.Instance.Playlist());
+        MusicManager.Instance.StartPlaylist();
         isPaused = false;
         isAnotherUIActive = false;
         Time.timeScale = 1.0f;

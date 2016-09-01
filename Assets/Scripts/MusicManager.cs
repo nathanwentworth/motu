@@ -46,7 +46,7 @@ public class MusicManager : MonoBehaviour {
         }
 
     }
-    // Use this for initialization
+    
 
     public IEnumerator Playlist(){
 		PlaylistNumber = Mathf.RoundToInt(Random.Range (1, 4));
@@ -100,7 +100,12 @@ public class MusicManager : MonoBehaviour {
 
     public void StopPlayList()
     {
-        StopCoroutine(Playlist());
+        StopCoroutine("Playlist");
+    }
+
+    public void StartPlaylist()
+    {
+        StartCoroutine("Playlist");
     }
 
     public void PlayConfirm()
