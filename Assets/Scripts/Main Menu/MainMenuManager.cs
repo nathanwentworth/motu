@@ -33,13 +33,11 @@ public class MainMenuManager : MonoBehaviour
     private string RESOLUTIONKEY = "RESOLUTION_VALUE";
     private string FULLSCREENKEY = "FULLSCREEN_VALUE";
     private string MOUSESENSITIVITYKEY = "MOUSESENSITIVITY_KEY";
-    private string TUTORIALCOMPLETE = "TUTORIAL_COMPLETE";
 
     public float timeBetween;
 
     private bool wasResolutionChanged = false;
     private bool wasFullscreenChanged = false;
-    private int tutorialComplete = 0;
     private bool creditsDisplayed;
 
 	public AudioMixerSnapshot END;
@@ -77,7 +75,6 @@ public class MainMenuManager : MonoBehaviour
         options_FullOrWindDrop.value = PlayerPrefs.GetInt(FULLSCREENKEY, 0);
         options_ResolutionDrop.value = PlayerPrefs.GetInt(RESOLUTIONKEY, 0);
         options_MouseSensitivity.value = PlayerPrefs.GetFloat(MOUSESENSITIVITYKEY, 2.5f);
-        tutorialComplete = PlayerPrefs.GetInt(TUTORIALCOMPLETE, 0);
 
         options_ResolutionDrop.RefreshShownValue();
 
@@ -91,21 +88,6 @@ public class MainMenuManager : MonoBehaviour
         }
 
         MusicManager.Instance.SetMusicVolume(options_VolumeSlider.value);
-
-        if(tutorialComplete == 1)
-        {
-            FreePlayButtonGO.GetComponent<Button>().interactable = true;
-            FreePlayButtonText.GetComponent<Button>().interactable = true;
-            GalleryButtonGO.GetComponent<Button>().interactable = true;
-            GalleryButtonText.GetComponent<Button>().interactable = true;
-        }
-        else
-        {
-            FreePlayButtonGO.GetComponent<Button>().interactable = false;
-            FreePlayButtonText.GetComponent<Button>().interactable = false;
-            GalleryButtonGO.GetComponent<Button>().interactable = false;
-            GalleryButtonText.GetComponent<Button>().interactable = false;
-        }
     }
 
     void Update()
